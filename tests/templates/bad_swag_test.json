@@ -1,0 +1,30 @@
+{
+    "data": [
+        {
+            "account": "012345678910",
+            "description": "Test account 1",
+            "cloudtrail": "http://wouldnt/you/like/to/know",
+            "cloudtrail_index": "cloudtrail_test1",
+            "alias": [
+                "testaccnt1"
+            ],
+            "bastion": "test1.net",
+            "owner": "someadmin@netflix.com",
+            "type": "aws",
+            "name": "test1@test"
+        },
+        {
+            "account": "109876543210",
+            "description": "Test account 2",
+            "cloudtrail": "http://wouldnt/you/like/to/know",
+            "cloudtrail_index": "cloudtrail_test2",
+            "alias": [
+                "testaccnt2"
+            ],
+            "bastion": "test2.net",
+            "owner": "someadmin@netflix.com",
+            "type": "aws",
+            "name": "test2@test"
+        }
+    ]
+}

@@ -1,0 +1,2 @@
+[report]
+include = swag_client/*.py
