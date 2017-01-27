@@ -12,7 +12,7 @@ swag_client
 .. image:: https://coveralls.io/repos/github/Netflix-Skunkworks/swag-client/badge.svg?branch=master
     :target: https://coveralls.io/github/Netflix-Skunkworks/swag-client?branch=master
     :alt: Test Coverage
-    
+
 .. image:: https://img.shields.io/badge/NetflixOSS-active-brightgreen.svg
 
 Reason:
