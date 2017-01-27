@@ -20,9 +20,9 @@ with open(os.path.join(ROOT, "swag_client", "__about__.py")) as f:
 
 
 install_requires = [
-    'requests==2.9.1',
+    'requests>=2.9.1',
     'marshmallow>=2.6.0',
-    'inflection==0.3.1',
+    'inflection>=0.3.1',
     'boto3>=1.2.6',
     'tabulate>=0.7.5',
     'beaker>=1.8.0',
@@ -30,7 +30,7 @@ install_requires = [
 ]
 
 tests_require = [
-    'pytest==2.8.3',
+    'pytest>=2.8.3',
     'moto>=0.4.23',
 ]
 
