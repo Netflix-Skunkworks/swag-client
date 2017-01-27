@@ -17,7 +17,8 @@ before_script:
   - pip install --upgrade setuptools
   - python setup.py develop
   - pip install coveralls
-  - pip install .[tests]
+  - pip install moto
+  - pip install pytest
 
 script:
   - coverage run -m py.test tests || exit 1
