@@ -93,7 +93,7 @@ def upload(data, bucket, region, json_path):
     accounts = SWAGSchema(strict=True).dumps(data)
 
     s3 = boto3.cli("s3", region_name=region)
-    s3.put_object(Bucket=bucket, Key=json_path, Body=accounts)
+    s3.put_object(Bucket=bucket, Key=json_path, Body=accounts, CacheControl='no-cache, no-store, must-revalidate')
 
 
 @cache.cache(expire=3600)
