@@ -58,6 +58,10 @@ or to filter by a service tag::
 
     service = {'services': {'YOURSERVICE': {'enabled': True, 'randomflag': True}}}
     get_all_accounts(bucket='your-swag-bucket', **service).get('accounts')
+    
+SWAG data can also be loaded from a file::
+    
+    get_all_accounts(bucket='file://my_accounts.json')
 
 Permissions required::
 
@@ -102,4 +106,3 @@ Example JSON:
 See sample_accounts.json_
 
 .. _sample_accounts.json: https://github.com/Netflix-Skunkworks/swag-client/blob/master/sample_accounts.json
-

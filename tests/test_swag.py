@@ -78,6 +78,9 @@ def test_get_all_accounts(swag_bucket):
     data = get_all_accounts(SWAG_BUCKET, region=SWAG_BUCKET_REGION, json_path=ACCOUNTS_FILE_PATH, **{'metadata': {"s3_name": "testaccount2"}})
     assert len(data["accounts"]) == 1
 
+    data = get_all_accounts('file://tests/templates/swag_test.json')
+    assert (len(data["accounts"])) == 2
+
 def test_get_by_name(swag_data):
     # Test getting account named: "test1@test"
     account = get_by_name("test1@test", SWAG_BUCKET, region=SWAG_BUCKET_REGION, json_path=ACCOUNTS_FILE_PATH)
@@ -114,4 +117,3 @@ def test_get_by_aws_account_number(swag_data):
     # Test exception:
     with pytest.raises(InvalidSWAGDataException):
         get_by_aws_account_number("( ͡° ͜ʖ ͡°)", SWAG_BUCKET, region=SWAG_BUCKET_REGION, json_path=BAD_ACCOUNTS_FILE_PATH)
-

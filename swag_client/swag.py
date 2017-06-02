@@ -10,6 +10,7 @@ from beaker.util import parse_cache_config_options
 from marshmallow import Schema, fields, validates_schema
 from marshmallow.exceptions import ValidationError
 from marshmallow.validate import Length, Validator, OneOf
+import os
 
 # Set up a CacheManager for caching SWAG data:
 from swag_client import InvalidSWAGDataException
@@ -157,9 +158,22 @@ def get_all_accounts(bucket, region='us-west-2', json_path='accounts.json', **fi
 
     :return:
     """
+    if _is_file_bucket(bucket):
+        try:
+            with open(bucket.split('file://')[1]) as f:
+                accounts_obj = f.read()
+        except IOError:
+            raise InvalidSWAGDataException({'Unable to open file': 'current directory: {}, target: {}'.format(
+                                           os.getcwd(), bucket)})
+    else:
+        accounts_obj = fetch(bucket, region, json_path)
 
-    accounts_obj = fetch(bucket, region, json_path)
     accounts_dict, errors = SWAGSchema(strict=True).loads(accounts_obj)
     accounts_dict["accounts"] = [account for account in accounts_dict["accounts"] if is_sub_dict(filters, account)]
     return accounts_dict
 
+
+def _is_file_bucket(bucket_name):
+    if bucket_name.startswith('file://'):
+        return True
+    return False

@@ -63,4 +63,3 @@ def table(bucket):
     """
     _table = [[result['name'], result['metadata'].get('account_number')] for result in get_all_accounts(bucket=bucket).get('accounts')]
     return tabulate(_table, headers=["Account Name", "Account Number"])
-
