@@ -3,7 +3,7 @@ language: python
 matrix:
   include:
     - python: "2.7"
-    - python: "3.5"
+    - python: "3.6"
 
 cache:
   directories:
@@ -14,18 +14,17 @@ env:
     - PIP_DOWNLOAD_CACHE=".pip_download_cache"
 
 before_script:
+  - pip install --upgrade pip
   - pip install --upgrade setuptools
   - python setup.py develop
-  - pip install coveralls
-  - pip install moto
-  - pip install pytest
+  - pip install .[tests]
 
 script:
-  - coverage run -m py.test tests || exit 1
+  - coverage run -m py.test || exit 1
 
 after_success:
   - coveralls
 
 notifications:
   email:
-    - pkelley@netflix.com
+    - secops@netflix.com

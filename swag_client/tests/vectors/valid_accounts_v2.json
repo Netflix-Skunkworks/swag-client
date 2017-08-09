@@ -1,0 +1,113 @@
+[{
+    "aliases": ["test"],
+    "contacts": ["admins@test.net"],
+    "description": "LOL, Test account",
+    "email": "testaccount@test.net",
+    "environment": "test",
+    "id": "012345678910",
+    "name": "testaccount",
+    "owner": "netflix",
+    "provider": "aws",
+    "sensitive": false,
+    "services": [
+        {
+            "name": "s3",
+            "metadata": {
+                "name": "testaccount"
+            },
+            "status": [
+                {
+                    "enabled": true,
+                    "region": "all"
+                }
+            ]
+        },
+        {
+            "name": "cloudtrail",
+            "metadata": {
+                "kibanaUrl": "http://testaccount.cloudtrail.dashboard.net",
+                "esIndex": "cloudtrail_testaccount[yyyymm]"
+            },
+            "status": [
+                {
+                    "enabled": true,
+                    "region": "all"
+                }
+            ]
+        },
+        {
+            "name": "rolliepollie",
+            "status": [
+                {
+                    "enabled": true,
+                    "region": "all"
+                }
+            ]
+        },
+        {
+            "name": "awwwdit",
+            "status": [
+                {
+                    "enabled": true,
+                    "region": "all"
+                }
+            ]
+        }
+    ]
+}, {
+    "aliases": ["test2"],
+    "contacts": ["admins@test2.net"],
+    "description": "LOL, Test account",
+    "email": "test2account@test.net",
+    "environment": "test",
+    "id": "0123452323",
+    "name": "testaccount2",
+    "owner": "netflix",
+    "provider": "aws",
+    "sensitive": false,
+    "services": [
+        {
+            "name": "s3",
+            "metadata": {
+                "name": "testaccount2"
+            },
+            "status": [
+                {
+                    "enabled": true,
+                    "region": "all"
+                }
+            ]
+        },
+        {
+            "name": "cloudtrail",
+            "metadata": {
+                "kibanaUrl": "http://testaccount.cloudtrail.dashboard.net",
+                "esIndex": "cloudtrail_testaccount[yyyymm]"
+            },
+            "status": [
+                {
+                    "enabled": true,
+                    "region": "all"
+                }
+            ]
+        },
+        {
+            "name": "rolliepollie",
+            "status": [
+                {
+                    "enabled": true,
+                    "region": "all"
+                }
+            ]
+        },
+        {
+            "name": "awwwdit",
+            "status": [
+                {
+                    "enabled": true,
+                    "region": "all"
+                }
+            ]
+        }
+    ]
+}]

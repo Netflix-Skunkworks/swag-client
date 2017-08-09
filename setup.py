@@ -20,18 +20,18 @@ with open(os.path.join(ROOT, "swag_client", "__about__.py")) as f:
 
 
 install_requires = [
-    'requests>=2.9.1',
-    'marshmallow>=2.6.0',
-    'inflection>=0.3.1',
-    'boto3>=1.2.6',
-    'tabulate>=0.7.5',
-    'beaker>=1.8.0',
-    'docopt==0.6.2'
+    'marshmallow==2.13.5',
+    'inflection==0.3.1',
+    'boto3==1.4.4',
+    'tabulate==0.7.7',
+    'beaker==1.9.0',
+    'click==6.7'
 ]
 
 tests_require = [
-    'pytest>=2.8.3',
-    'moto>=0.4.23',
+    'pytest==3.1.3',
+    'moto==1.0.1',
+    'coveralls==1.1'
 ]
 
 setup(
@@ -41,7 +41,7 @@ setup(
     author_email=about["__email__"],
     url=about["__uri__"],
     description=about["__summary__"],
-    long_description=open(os.path.join(ROOT, 'README.rst')).read(),
+    long_description='See README.md',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
@@ -51,9 +51,14 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'swag = swag_client.cli:main',
+            'swag-client = swag_client.cli:cli',
+        ],
+        'swag_client.backends': [
+            'file = swag_client.backends.file:FileSWAGManager',
+            's3 = swag_client.backends.s3:S3SWAGManager',
+            'dynamodb = swag_client.backends.dynamodb:DynamoDBSWAGManager'
         ]
     },
-    keywords = ['aws', 'account_management']
+    keywords=['aws', 'account_management']
 )
 
