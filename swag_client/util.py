@@ -9,6 +9,7 @@ class OptionsSchema(Schema):
     type = fields.String(missing='file', validate=OneOf(['file', 's3', 'dynamodb']))
     namespace = fields.String(required=True, missing='accounts')
     schema_version = fields.Integer(missing=2)  # default version to return data as
+    cache_expires = fields.Integer(missing=60)
 
 
 class FileOptionsSchema(OptionsSchema):

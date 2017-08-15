@@ -91,7 +91,8 @@ SWAG supports multiple backends, included in the package are file, s3, and dynam
 | --- | ---- | -------- | ----------- |
 | swag.type | str | false | Type of backend to use (Default: 'file') |
 | swag.namespace | str | false | Namespace for metadata (Default: 'accounts') |
-
+| swag.schema_version | int | false | Schema version that will be returned to the caller. (Default: 'v2') |
+| swag.cache_expires | int | false | Number of seconds to cache backend results (Default: 60) |
 
 ### S3 Backend
 

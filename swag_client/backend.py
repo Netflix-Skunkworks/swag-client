@@ -6,6 +6,8 @@
 import logging
 import pkg_resources
 
+from beaker.cache import cache_regions, cache_region
+
 import jmespath
 
 from swag_client.exceptions import InvalidSWAGBackendError
@@ -29,10 +31,12 @@ class SWAGManager(object):
     def __init__(self, *args, **kwargs):
         self.version = kwargs['schema_version']
         self.backend = get(kwargs['type'])(*args, **kwargs)
-
-    def get(self, search_filter):
-        """Fetch one item from backend."""
-        return self.backend.get(search_filter)
+        cache_regions.update({
+            'swag': {
+                'expire': kwargs['cache_expires'],
+                'type': 'memory'
+            }
+        })
 
     def create(self, item):
         """Create a new item in backend."""
@@ -46,6 +50,12 @@ class SWAGManager(object):
         """Update an item in backend."""
         return self.backend.update(item)
 
+    @cache_region('swag')
+    def get(self, search_filter):
+        """Fetch one item from backend."""
+        return self.backend.get(search_filter)
+
+    @cache_region('swag')
     def get_all(self, search_filter=None):
         """Fetch all data from backend."""
         return self.backend.get_all(search_filter=search_filter)

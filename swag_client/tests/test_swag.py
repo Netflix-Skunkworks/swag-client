@@ -111,7 +111,8 @@ def test_file_backend_get_all(vector_path):
 
     swag_opts = {
         'swag.data_dir': vector_path,
-        'swag.namespace': 'valid_accounts_v2'
+        'swag.namespace': 'valid_accounts_v2',
+        'swag.cache_expires': 0
     }
 
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
@@ -123,7 +124,8 @@ def test_file_backend_update(temp_file_name):
     from swag_client.util import parse_swag_config_options
 
     swag_opts = {
-        'swag.data_file': str(temp_file_name)
+        'swag.data_file': str(temp_file_name),
+        'swag.cache_expires': 0
     }
 
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
@@ -155,7 +157,8 @@ def test_file_backend_delete(temp_file_name):
     from swag_client.util import parse_swag_config_options
 
     swag_opts = {
-        'swag.data_file': str(temp_file_name)
+        'swag.data_file': str(temp_file_name),
+        'swag.cache_expires': 0
     }
 
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
@@ -183,7 +186,8 @@ def test_file_backend_create(temp_file_name):
     from swag_client.util import parse_swag_config_options
 
     swag_opts = {
-        'swag.data_file': str(temp_file_name)
+        'swag.data_file': str(temp_file_name),
+        'swag.cache_expires': 0
     }
 
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
@@ -212,7 +216,8 @@ def test_file_backend_get(vector_path):
 
     swag_opts = {
         'swag.data_dir': vector_path,
-        'swag.namespace': 'valid_accounts_v2'
+        'swag.namespace': 'valid_accounts_v2',
+        'swag.cache_expires': 0
     }
 
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
@@ -226,7 +231,8 @@ def test_backend_get_by_name(vector_path):
 
     swag_opts = {
         'swag.data_dir': vector_path,
-        'swag.namespace': 'valid_accounts_v2'
+        'swag.namespace': 'valid_accounts_v2',
+        'swag.cache_expires': 0
     }
 
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
@@ -242,7 +248,8 @@ def test_backend_get_service_name(vector_path):
 
     swag_opts = {
         'swag.data_dir': vector_path,
-        'swag.namespace': 'valid_accounts_v2'
+        'swag.namespace': 'valid_accounts_v2',
+        'swag.cache_expires': 0
     }
 
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
@@ -255,7 +262,8 @@ def test_s3_backend_get_all(s3_bucket_name):
 
     swag_opts = {
         'swag.type': 's3',
-        'swag.bucket_name': s3_bucket_name
+        'swag.bucket_name': s3_bucket_name,
+        'swag.cache_expires': 0
     }
 
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
@@ -283,7 +291,8 @@ def test_s3_backend_update(s3_bucket_name):
 
     swag_opts = {
         'swag.type': 's3',
-        'swag.bucket_name': s3_bucket_name
+        'swag.bucket_name': s3_bucket_name,
+        'swag.cache_expires': 0
     }
 
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
@@ -317,7 +326,8 @@ def test_s3_backend_delete(s3_bucket_name):
 
     swag_opts = {
         'swag.type': 's3',
-        'swag.bucket_name': s3_bucket_name
+        'swag.bucket_name': s3_bucket_name,
+        'swag.cache_expires': 0
     }
 
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
@@ -366,7 +376,8 @@ def test_s3_backend_delete_v1(s3_bucket_name):
     swag_opts = {
         'swag.type': 's3',
         'swag.bucket_name': s3_bucket_name,
-        'swag.schema_version': 1
+        'swag.schema_version': 1,
+        'swag.cache_expires': 0
     }
 
     swagv1 = SWAGManager(**parse_swag_config_options(swag_opts))
@@ -419,7 +430,8 @@ def test_s3_backend_create(s3_bucket_name):
 
     swag_opts = {
         'swag.type': 's3',
-        'swag.bucket_name': s3_bucket_name
+        'swag.bucket_name': s3_bucket_name,
+        'swag.cache_expires': 0
     }
 
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
@@ -448,7 +460,8 @@ def test_s3_backend_get(s3_bucket_name):
 
     swag_opts = {
         'swag.type': 's3',
-        'swag.bucket_name': s3_bucket_name
+        'swag.bucket_name': s3_bucket_name,
+        'swag.cache_expires': 0
     }
 
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
@@ -479,7 +492,8 @@ def test_dynamodb_backend_get():
         'swag.type': 'dynamodb',
         'swag.namespace': 'accounts',
         'swag.key_type': 'HASH',
-        'swag.key_attribute': 'id'
+        'swag.key_attribute': 'id',
+        'swag.cache_expires': 0
     }
 
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
@@ -510,7 +524,8 @@ def test_dynamodb_backend_get_all():
         'swag.type': 'dynamodb',
         'swag.namespace': 'accounts',
         'swag.key_type': 'HASH',
-        'swag.key_attribute': 'id'
+        'swag.key_attribute': 'id',
+        'swag.cache_expires': 0
     }
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
 
@@ -540,7 +555,8 @@ def test_dynamodb_backend_update():
         'swag.type': 'dynamodb',
         'swag.namespace': 'accounts',
         'swag.key_type': 'HASH',
-        'swag.key_attribute': 'id'
+        'swag.key_attribute': 'id',
+        'swag.cache_expires': 0
     }
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
 
@@ -574,7 +590,8 @@ def test_dynamodb_backend_delete():
         'swag.type': 'dynamodb',
         'swag.namespace': 'accounts',
         'swag.key_type': 'HASH',
-        'swag.key_attribute': 'id'
+        'swag.key_attribute': 'id',
+        'swag.cache_expires': 0
     }
 
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
@@ -606,7 +623,8 @@ def test_dynamodb_backend_create():
         'swag.type': 'dynamodb',
         'swag.namespace': 'accounts',
         'swag.key_type': 'HASH',
-        'swag.key_attribute': 'id'
+        'swag.key_attribute': 'id',
+        'swag.cache_expires': 0
     }
 
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
@@ -639,7 +657,8 @@ def test_get_all_accounts(s3_bucket_name):
     swag_opts = {
         'swag.type': 's3',
         'swag.bucket_name': s3_bucket_name,
-        'swag.schema_version': 1
+        'swag.schema_version': 1,
+        'swag.cache_expires': 0
     }
 
     swagv1 = SWAGManager(**parse_swag_config_options(swag_opts))
@@ -694,7 +713,8 @@ def test_get_by_name(s3_bucket_name):
     swag_opts = {
         'swag.type': 's3',
         'swag.bucket_name': s3_bucket_name,
-        'swag.schema_version': 1
+        'swag.schema_version': 1,
+        'swag.cache_expires': 0
     }
 
     swagv1 = SWAGManager(**parse_swag_config_options(swag_opts))
@@ -749,7 +769,8 @@ def test_get_by_aws_account_number(s3_bucket_name):
     swag_opts = {
         'swag.type': 's3',
         'swag.bucket_name': s3_bucket_name,
-        'swag.schema_version': 1
+        'swag.schema_version': 1,
+        'swag.cache_expires': 0
     }
 
     swagv1 = SWAGManager(**parse_swag_config_options(swag_opts))
