@@ -22,7 +22,7 @@ with open(os.path.join(ROOT, "swag_client", "__about__.py")) as f:
 install_requires = [
     'marshmallow==2.13.5',
     'inflection==0.3.1',
-    'boto3==1.4.4',
+    'boto3>=1.4.6',
     'tabulate==0.7.7',
     'beaker==1.9.0',
     'click==6.7'
@@ -61,4 +61,3 @@ setup(
     },
     keywords=['aws', 'account_management']
 )
-
