@@ -137,3 +137,28 @@ def list(bucket_region, bucket_name, type, data_dir, namespace):
     click.echo(
         tabulate(_table, headers=["Account Name", "Account Number"])
     )
+
+
+@click.command()
+@click.argument('data', type=click.File())
+def load_aws_data(data):
+    """Loads aws account data and populates SWAG."""
+    swag_opts = {
+        'swag.type': 'dynamodb',
+        'swag.key_type': 'HASH',
+        'swag.key_attribute': 'id'
+    }
+
+    swag = SWAGManager(**parse_swag_config_options(swag_opts))
+
+    for k, v in json.loads(data.read()):
+        for account in v['accounts']:
+            swag.create(
+                {
+                    'description': 'This is an AWS owned account used for {}'.format(k),
+                    'id': account['account_id'],
+                    'owner': 'aws',
+                    'provider': 'aws',
+                    'sensitive': False
+                }
+            )
