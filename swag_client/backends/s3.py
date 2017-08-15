@@ -1,3 +1,4 @@
+import sys
 import json
 import logging
 
@@ -22,7 +23,12 @@ def load_file(client, bucket, data_file):
         key=data_file
     ))
     try:
-        return json.loads(client.get_object(Bucket=bucket, Key=data_file)['Body'].read())
+        data = client.get_object(Bucket=bucket, Key=data_file)['Body'].read()
+
+        if sys.version_info > (3,):
+            data = data.decode('utf-8')
+
+        return json.loads(data)
     except JSONDecodeError as e:
         return
     except ClientError as e:

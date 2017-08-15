@@ -25,7 +25,9 @@ install_requires = [
     'boto3>=1.4.6',
     'tabulate==0.7.7',
     'beaker==1.9.0',
-    'click==6.7'
+    'click==6.7',
+    'jmespath==0.9.3',
+    'botocore==1.6.1'
 ]
 
 tests_require = [
