@@ -147,7 +147,20 @@ def upgrade(account):
             name=account['name'],
             contacts=account['owners'],
             provider=account['type'],
-            status=[],
+            status=[
+                {
+                    'region': 'us-east-1',
+                    'status': 'ready'
+                },
+                {
+                    'region': 'us-west-2',
+                    'status': 'ready'
+                },
+                {
+                    'region': 'eu-west-1',
+                    'status': 'ready'
+                }
+            ],
             tags=list(set(account['tags'])),
             environment=environ,
             description=account['description'],
