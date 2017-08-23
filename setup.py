@@ -25,7 +25,8 @@ install_requires = [
     'tabulate>=0.7.7',
     'beaker>=1.9.0',
     'click>=6.7',
-    'jmespath>=0.9.3'
+    'jmespath>=0.9.3',
+    'deepdiff>=3.3.0'
 ]
 
 tests_require = [

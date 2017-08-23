@@ -1,10 +1,8 @@
-import pytest
-from moto.dynamodb2 import mock_dynamodb2
+from deepdiff import DeepDiff
 
 
-@pytest.mark.skip
 def test_upgrade_1_to_2():
-    from swag_client.schemas.v2 import upgrade, downgrade
+    from swag_client.migrations.versions.v2 import upgrade, downgrade
 
     a = {
         "bastion": "testaccount.net",
@@ -23,8 +21,10 @@ def test_upgrade_1_to_2():
         "description": "LOL, Test account",
         "cmc_required": False,
         "tags": [
-            "testing"
+            "testing",
+            "test"
         ],
+        "netflix": True,
         "id": "aws-012345678910",
         "name": "testaccount",
         "type": "aws",
@@ -43,66 +43,8 @@ def test_upgrade_1_to_2():
 
     v2 = upgrade(a)
 
-    assert v2 == {
-        'aliases': ['test'],
-        'contacts': ['admins@test.net'],
-        'description': 'LOL, Test account',
-        'email': 'testaccount@test.net',
-        'environment': 'test',
-        'id': '012345678910',
-        'name': 'testaccount',
-        'owner': 'netflix',
-        'provider': 'aws',
-        'sensitive': False,
-        'services': [
-            {
-                'name': 's3',
-                'metadata': {
-                    'name': 'testaccount3'
-                },
-                'status': [
-                    {
-                        'enabled': True,
-                        'region': 'all'
-                    }
-                ]
-            },
-            {
-                'name': 'cloudtrail',
-                'metadata': {
-                    'kibanaUrl': 'http://testaccount.cloudtrail.dashboard.net',
-                    'esIndex': 'cloudtrail_testaccount[yyyymm]'
-                },
-                'status': [
-                    {
-                        'enabled': True,
-                        'region': 'all'
-                    }
-                ]
-            },
-            {
-                'name': 'rolliepollie',
-                'status': [
-                    {
-                        'enabled': True,
-                        'region': 'all'
-                    }
-                ]
-            },
-            {
-                'name': 'awwwdit',
-                'status': [
-                    {
-                        'enabled': True,
-                        'region': 'all'
-                    }
-                ]
-            }
-        ]
-    }
-
     v1 = downgrade(v2)
-    assert v1 == a
+    assert not DeepDiff(v1, a, ignore_order=True)
 
 
 def test_file_backend_get_all(vector_path):
@@ -366,8 +308,6 @@ def test_s3_backend_delete(s3_bucket_name):
     swag.delete(account)
     assert len(swag.get_all()) == 1
 
-    #
-
 
 def test_s3_backend_delete_v1(s3_bucket_name):
     from swag_client.backend import SWAGManager
@@ -483,16 +423,13 @@ def test_s3_backend_get(s3_bucket_name):
     assert swag.get("[?id=='012345678910']")
 
 
-@mock_dynamodb2
-def test_dynamodb_backend_get():
+def test_dynamodb_backend_get(dynamodb_table):
     from swag_client.backend import SWAGManager
     from swag_client.util import parse_swag_config_options
 
     swag_opts = {
         'swag.type': 'dynamodb',
         'swag.namespace': 'accounts',
-        'swag.key_type': 'HASH',
-        'swag.key_attribute': 'id',
         'swag.cache_expires': 0
     }
 
@@ -515,16 +452,13 @@ def test_dynamodb_backend_get():
     assert swag.get("[?id=='012345678910']")
 
 
-@mock_dynamodb2
-def test_dynamodb_backend_get_all():
+def test_dynamodb_backend_get_all(dynamodb_table):
     from swag_client.backend import SWAGManager
     from swag_client.util import parse_swag_config_options
 
     swag_opts = {
         'swag.type': 'dynamodb',
         'swag.namespace': 'accounts',
-        'swag.key_type': 'HASH',
-        'swag.key_attribute': 'id',
         'swag.cache_expires': 0
     }
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
@@ -546,8 +480,7 @@ def test_dynamodb_backend_get_all():
     assert len(swag.get_all()) == 1
 
 
-@mock_dynamodb2
-def test_dynamodb_backend_update():
+def test_dynamodb_backend_update(dynamodb_table):
     from swag_client.backend import SWAGManager
     from swag_client.util import parse_swag_config_options
 
@@ -581,16 +514,13 @@ def test_dynamodb_backend_update():
     assert swag.get("[?id=='{id}']".format(id=account['id']))
 
 
-@mock_dynamodb2
-def test_dynamodb_backend_delete():
+def test_dynamodb_backend_delete(dynamodb_table):
     from swag_client.backend import SWAGManager
     from swag_client.util import parse_swag_config_options
 
     swag_opts = {
         'swag.type': 'dynamodb',
         'swag.namespace': 'accounts',
-        'swag.key_type': 'HASH',
-        'swag.key_attribute': 'id',
         'swag.cache_expires': 0
     }
 
@@ -614,16 +544,13 @@ def test_dynamodb_backend_delete():
     assert not swag.get("[?id=='012345678910']")
 
 
-@mock_dynamodb2
-def test_dynamodb_backend_create():
+def test_dynamodb_backend_create(dynamodb_table):
     from swag_client.backend import SWAGManager
     from swag_client.util import parse_swag_config_options
 
     swag_opts = {
         'swag.type': 'dynamodb',
         'swag.namespace': 'accounts',
-        'swag.key_type': 'HASH',
-        'swag.key_attribute': 'id',
         'swag.cache_expires': 0
     }
 

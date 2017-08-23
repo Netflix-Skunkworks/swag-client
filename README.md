@@ -144,15 +144,13 @@ The file backend uses a file on the local filesystem. This backend is often usef
 ### DynamoDB Backend
 The DynamoDB backend leverages AWSs DynamoDB as a key value store for SWAG metadata.
 
+SWAG expects a Dynamodb Table already exists.
+
 #### Backend Options
 
 | Key | Type | Required | Description |
 | --- | ---- | -------- | ----------- |
-| swag.key_attribute | str | false | Unique attribute key |
-| swag.key_type | str | false | Type of attribute key (typically HASH) |
 | swag.region | str | false | Region dynamodb table exists |
-| swag.read_units | int | false | Number of read units (Default: 1) |
-| swag.write_units | int | false | Number of write units (Default: 1) |
 
 Note the above options except region is only needed if not SWAG table has been created.
 
@@ -191,24 +189,6 @@ If you wish SWAG to modify your table you will need the following additional per
                 "dynamodb:PutItem",
                 "dynamodb:UpdateItem",
                 "dynamodb:DeleteItem"
-            ],
-            "Resource": "*"
-        }
-    ]
-}
-```
-
-If you wish for SWAG to create your table if it does not exist you will need the following additional permissions:
-
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "PutUpdateDeleteTable",
-            "Effect": "Allow",
-            "Action": [
-                "dynamodb:CreateTable"
             ],
             "Resource": "*"
         }
