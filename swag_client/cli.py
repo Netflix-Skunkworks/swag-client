@@ -7,7 +7,7 @@ from swag_client.backend import SWAGManager
 from swag_client.util import parse_swag_config_options
 from swag_client.schemas import v1, v2
 
-from swag_client.migrations.migrations import run_migration
+from swag_client.migrations import run_migration
 
 
 def validate_data(data, version=None):
