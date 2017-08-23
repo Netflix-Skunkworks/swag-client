@@ -1,6 +1,5 @@
 """Contains the revision information for a given SWAG Table"""
 
-
 revision = 'v2'
 down_revision = None
 
@@ -178,7 +177,8 @@ def upgrade(account):
 
 def downgrade(account):
     """Transforms data from v2 format to a v1 format"""
-    d_account = dict(schema_version=1, metadata={'email': account['email']}, tags=list(set([account['environment']] + account.get('tags', []))))
+    d_account = dict(schema_version=1, metadata={'email': account['email']},
+                     tags=list(set([account['environment']] + account.get('tags', []))))
 
     v1_services = {}
     for service in account.get('services', []):
@@ -219,8 +219,21 @@ def downgrade(account):
             }
 
         elif service['name'] == 'access_ui':
+            roles = []
+            for r in service['metadata']['roles']:
+                roles.append(
+                    {
+                        'id': r['id'],
+                        'role_name': r['roleName'],
+                        'aws_account_num': r['awsAccountNumber'],
+                        'google_group': r['googleGroup'],
+                        'secondary_approver': r['secondaryApprover'],
+                        'policy_url': r['policyUrl']
+                    }
+                )
+
             v1_services['access_ui'] = {
-                'roles': service['metadata']['roles']
+                'roles': roles
             }
 
         elif service['name'] == 'lazyfalcon':

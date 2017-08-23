@@ -1,4 +1,5 @@
 import os
+import time
 import json
 import click
 from tabulate import tabulate
@@ -188,6 +189,7 @@ def propagate(ctx):
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
 
     for item in data:
+        time.sleep(2)
         swag.create(item)
 
 
