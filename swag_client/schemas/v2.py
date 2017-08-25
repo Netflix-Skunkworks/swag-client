@@ -43,10 +43,10 @@ class AccountSchema(Schema):
     tags = fields.List(fields.Str(), missing=[])
     status = fields.Nested(AccountStatusSchema, many=True, missing=[])
     email = fields.Email(required=True)
-    environment = fields.Str(validate=OneOf(ACCOUNT_ENVIRONMENTS), missing='test')
+    environment = fields.Str(validate=OneOf(ACCOUNT_ENVIRONMENTS), missing='prod')
     services = fields.Nested(ServiceSchema, many=True, missing=[])
     sensitive = fields.Bool(missing=False)
-    description = fields.Str(required=True, missing='')
+    description = fields.Str(required=True)
     owner = fields.Str(validate=OneOf(ACCOUNT_OWNERS), required=True, missing='netflix')
     aliases = fields.List(fields.Str(), missing=[])
 
