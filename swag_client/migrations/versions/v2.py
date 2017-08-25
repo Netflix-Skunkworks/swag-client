@@ -86,7 +86,21 @@ def upgrade(account):
             s['metadata'] = {'stacks': account['services'][service]['stacks']}
 
         if service == 'access_ui':
-            s['metadata'] = {'roles': account['services'][service]['roles']}
+
+            roles = []
+            for r in account['services'][service]['roles']:
+                roles.append(
+                    {
+                        'id': r['id'],
+                        'roleName': r['role_name'],
+                        'awsAccountNumber': r['aws_account_num'],
+                        'googleGroup': r['google_group'],
+                        'secondaryApprover': r['secondary_approver'],
+                        'policyUrl': r['policy_url']
+                    }
+                )
+
+            s['metadata'] = {'roles': roles}
 
         services.append(s)
 

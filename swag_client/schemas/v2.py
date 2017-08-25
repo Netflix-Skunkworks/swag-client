@@ -17,37 +17,37 @@ class NoteSchema(Schema):
 class AccountStatusSchema(Schema):
     region = fields.Str(required=True)
     status = fields.Str(validate=OneOf(ACCOUNT_STATUSES), missing='created')
-    notes = fields.Nested(NoteSchema, many=True)
+    notes = fields.Nested(NoteSchema, many=True, missing=[])
 
 
 class ServiceStatusSchema(Schema):
     region = fields.Str(required=True)
     enabled = fields.Boolean(missing=False)
-    notes = fields.Nested(NoteSchema, many=True)
+    notes = fields.Nested(NoteSchema, many=True, missing=[])
 
 
 class ServiceSchema(Schema):
     name = fields.Str(required=True)
     status = fields.Nested(ServiceStatusSchema, many=True)
-    groups = fields.List(fields.Str())
-    metadata = fields.Dict()
+    groups = fields.List(fields.Str(), missing=[])
+    metadata = fields.Dict(missing={})
 
 
 class AccountSchema(Schema):
     schemaVersion = fields.Int(missing=2)
     id = fields.Str(required=True)
     name = fields.Str(required=True)
-    contacts = fields.List(fields.Email(), required=True)
+    contacts = fields.List(fields.Email(), required=True, missing=[])
     provider = fields.Str(validate=OneOf(PROVIDERS), missing='aws')
     type = fields.Str(validate=OneOf(ACCOUNT_TYPES), missing='service')
-    tags = fields.List(fields.Str())
-    status = fields.Nested(AccountStatusSchema, many=True)
-    email = fields.Email()
+    tags = fields.List(fields.Str(), missing=[])
+    status = fields.Nested(AccountStatusSchema, many=True, missing=[])
+    email = fields.Email(required=True)
     environment = fields.Str(validate=OneOf(ACCOUNT_ENVIRONMENTS), missing='test')
-    services = fields.Nested(ServiceSchema, many=True)
+    services = fields.Nested(ServiceSchema, many=True, missing=[])
     sensitive = fields.Bool(missing=False)
-    description = fields.Str(required=True)
-    owner = fields.Str(validate=OneOf(ACCOUNT_OWNERS), required=True)
-    aliases = fields.List(fields.Str())
+    description = fields.Str(required=True, missing='')
+    owner = fields.Str(validate=OneOf(ACCOUNT_OWNERS), required=True, missing='netflix')
+    aliases = fields.List(fields.Str(), missing=[])
 
 

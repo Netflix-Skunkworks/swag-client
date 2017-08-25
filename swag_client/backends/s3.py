@@ -43,7 +43,7 @@ def save_file(client, bucket, data_file, items):
         bucket=bucket,
         key=data_file
     ))
-    return client.put_object(Bucket=bucket, Key=data_file, Body=json.dumps(items), CacheControl='no-cache, no-store, must-revalidate')
+    return client.put_object(Bucket=bucket, Key=data_file, Body=json.dumps(items), ContentType='application/json', CacheControl='no-cache, no-store, must-revalidate')
 
 
 class S3SWAGManager(SWAGManager):
