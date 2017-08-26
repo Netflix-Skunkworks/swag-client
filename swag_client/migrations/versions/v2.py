@@ -206,6 +206,9 @@ def downgrade(account):
         elif service['name'] == 'bastion':
             d_account['bastion'] = service['metadata']['hostname']
 
+        elif service['name'] == 'titus':
+            v1_services['titus'] = {'stacks': service['metadata']['stacks']}
+
         elif service['name'] == 'spinnaker':
             v1_services['spinnaker'] = {
                 'name': service['metadata']['accountName'],

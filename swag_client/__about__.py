@@ -9,7 +9,8 @@ __title__ = "swag-client"
 __summary__ = ("Cloud multi-account metadata management tool.")
 __uri__ = "https://github.com/Netflix-Skunkworks/swag-client"
 
-__version__ = "0.2.7"
+__version__ = "0.2.8"
+
 
 __author__ = "The swag developers"
 __email__ = "oss@netflix.com"
