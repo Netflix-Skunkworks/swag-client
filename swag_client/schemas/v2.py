@@ -10,8 +10,16 @@ ACCOUNT_OWNERS = ['netflix', 'dvd', 'aws', 'third-party']
 
 
 class NoteSchema(Schema):
-    date = fields.Date(missing=datetime.utcnow())
+    date = fields.Date()
     text = fields.Str(required=True)
+
+
+class RoleSchema(Schema):
+    policyUrl = fields.Str()
+    roleName = fields.Str()
+    id = fields.Str(required=True)
+    secondaryApprover = fields.Str(default=None, missing=None)
+    googleGroup = fields.Str(required=True)
 
 
 class AccountStatusSchema(Schema):
@@ -29,12 +37,12 @@ class ServiceStatusSchema(Schema):
 class ServiceSchema(Schema):
     name = fields.Str(required=True)
     status = fields.Nested(ServiceStatusSchema, many=True)
-    groups = fields.List(fields.Str(), missing=[])
+    roles = fields.Nested(RoleSchema, many=True, missing=[])
     metadata = fields.Dict(missing={})
 
 
 class AccountSchema(Schema):
-    schemaVersion = fields.Int(missing=2)
+    schemaVersion = fields.Str(missing='2')
     id = fields.Str(required=True)
     name = fields.Str(required=True)
     contacts = fields.List(fields.Email(), required=True, missing=[])

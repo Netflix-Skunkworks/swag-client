@@ -1,5 +1,5 @@
 {
-  "CloudTrail Logs": {
+  "CloudTrailLogs": {
     "url": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-supported-regions.html",
     "accounts": [
       {
@@ -56,7 +56,7 @@
       }
     ]
   },
-  "ELB Logs": {
+  "ELBLogs": {
     "url": "https://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/enable-access-logs.html",
     "accounts": [
       {
@@ -117,7 +117,7 @@
       }
     ]
   },
-  "RedShift Logs": {
+  "RedShiftLogs": {
     "url": "https://docs.aws.amazon.com/redshift/latest/mgmt/db-auditing.html",
     "accounts": [
       {

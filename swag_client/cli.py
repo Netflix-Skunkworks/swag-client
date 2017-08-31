@@ -36,10 +36,9 @@ def create_swag_from_ctx(ctx):
         }
     elif ctx.obj['TYPE'] == 'dynamodb':
         swag_opts = {
-            'swag.type': dynamodb,
+            'swag.type': 'dynamodb',
             'swag.region': ctx.obj['REGION']
         }
-
     return SWAGManager(**parse_swag_config_options(swag_opts))
 
 
@@ -51,7 +50,7 @@ def cli(ctx, namespace):
 
 
 @cli.group()
-@click.option('--region', help='Region the table is located in.')
+@click.option('--region', default='us-east-1', help='Region the table is located in.')
 @click.pass_context
 def dynamodb(ctx, region):
     ctx.obj['REGION'] = region
@@ -126,20 +125,7 @@ def list(ctx):
         )
         return
 
-    swag_opts = {
-        'swag.type': ctx.obj['TYPE'],
-        'swag.data_dir': ctx.obj.get('DATA_DIR'),
-        'swag.data_file': ctx.obj.get('DATA_FILE'),
-        'swag.bucket_name': ctx.obj.get('BUCKET_NAME'),
-        'swag.region': ctx.obj.get('REGION'),
-        'swag.namespace': ctx.obj.get('NAMESPACE')
-    }
-
-    # remove none values
-    swag_opts = {key: value for (key, value) in swag_opts.items() if value}
-
-    swag = SWAGManager(**parse_swag_config_options(swag_opts))
-
+    swag = create_swag_from_ctx(ctx)
     accounts = swag.get_all()
     _table = [[result['name'], result.get('id')] for result in accounts]
     click.echo(
@@ -201,6 +187,33 @@ def create(ctx):
 
 
 @cli.command()
+@click.pass_context
+@click.argument('data', type=click.File())
+def update(ctx, data):
+    """Updates a given record."""
+    swag = create_swag_from_ctx(ctx)
+    data = json.loads(data.read())
+
+    for account in data:
+        account, errors = validate_data(account)
+
+        if errors:
+            click.echo(
+                json.dumps(account, indent=2)
+            )
+            click.echo(
+                json.dumps(errors)
+            )
+            continue
+
+        click.echo(click.style(
+            'Updated Account. AccountName: {}'.format(account['name']), fg='green')
+        )
+
+        swag.update(account)
+
+
+@cli.command()
 @click.argument('data', type=click.File())
 @click.pass_context
 def seed_aws_data(ctx, data):
@@ -208,16 +221,30 @@ def seed_aws_data(ctx, data):
     swag = create_swag_from_ctx(ctx)
     for k, v in json.loads(data.read()).items():
         for account in v['accounts']:
-            swag.create(
-                {
+            data, errors = validate_data({
                     'description': 'This is an AWS owned account used for {}'.format(k),
                     'id': account['account_id'],
+                    'contacts': [],
                     'owner': 'aws',
                     'provider': 'aws',
                     'sensitive': False,
-                    'name': k
-                }
+                    'email': 'support@amazon.com',
+                    'name': k + '-' + account['region']
+                })
+
+            if errors:
+                click.echo(
+                    json.dumps(account, indent=2)
+                )
+                click.echo(
+                    json.dumps(errors)
+                )
+
+            click.echo(click.style(
+                'Seeded Account. AccountName: {}'.format(data['name']), fg='green')
             )
+
+            swag.create(data)
 
 
 file.add_command(list)
@@ -226,9 +253,14 @@ file.add_command(migrate)
 file.add_command(propagate)
 file.add_command(create)
 file.add_command(seed_aws_data)
+file.add_command(update)
 dynamodb.add_command(list)
 dynamodb.add_command(create)
+dynamodb.add_command(update)
+dynamodb.add_command(seed_aws_data)
 s3.add_command(list)
 s3.add_command(create)
+s3.add_command(update)
+s3.add_command(seed_aws_data)
 
 

@@ -85,23 +85,6 @@ def upgrade(account):
         if service == 'titus':
             s['metadata'] = {'stacks': account['services'][service]['stacks']}
 
-        if service == 'access_ui':
-
-            roles = []
-            for r in account['services'][service]['roles']:
-                roles.append(
-                    {
-                        'id': r['id'],
-                        'roleName': r['role_name'],
-                        'awsAccountNumber': r['aws_account_num'],
-                        'googleGroup': r['google_group'],
-                        'secondaryApprover': r['secondary_approver'],
-                        'policyUrl': r['policy_url']
-                    }
-                )
-
-            s['metadata'] = {'roles': roles}
-
         services.append(s)
 
     if account['metadata'].get('project_id'):
@@ -236,24 +219,6 @@ def downgrade(account):
         elif service['name'] == 'rolliepollie':
             v1_services['rolliepollie'] = {
                 'enabled': service['status'][0]['enabled']
-            }
-
-        elif service['name'] == 'access_ui':
-            roles = []
-            for r in service['metadata']['roles']:
-                roles.append(
-                    {
-                        'id': r['id'],
-                        'role_name': r['roleName'],
-                        'aws_account_num': r['awsAccountNumber'],
-                        'google_group': r['googleGroup'],
-                        'secondary_approver': r['secondaryApprover'],
-                        'policy_url': r['policyUrl']
-                    }
-                )
-
-            v1_services['access_ui'] = {
-                'roles': roles
             }
 
         elif service['name'] == 'lazyfalcon':
