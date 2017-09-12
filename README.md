@@ -19,7 +19,7 @@ Managing your cloud accounts with SWAG allows for consuming application to focus
 swag-client is available on pypi:
 
 ```bash
-    pip install swag-client
+    pip install swag_client
 ```
 
 
