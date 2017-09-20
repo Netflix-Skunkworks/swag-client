@@ -60,6 +60,23 @@ class SWAGManager(object):
         """Fetch all data from backend."""
         return self.backend.get_all(search_filter=search_filter)
 
+    def get_service_enabled(self, service_name, accounts_list=None):
+        if not accounts_list:
+            accounts_list = self.backend.get_all().get('accounts', [])
+
+        service_enabled_accounts = []
+
+        for account in accounts_list:
+            for service in account.get('services', []):
+                # The part we need to get to is a little buried.  Basically, we need to scan the list of services for
+                # a dictionary where the name key matches, then we have to scan the status key, which is a list, and
+                # then look for a dictionary where the enabled key is set to True
+                if(service['name'] == service_name and
+                   len(list(filter(lambda status: status['enabled'], service.get('status', []))))):
+                    service_enabled_accounts.append(account)
+                    break
+        return service_enabled_accounts
+
     def get_service_name(self, name, search_filter):
         """Fetch account name as referenced by a particular service. """
         service_filter = "services[?name=='{}'].metadata.name".format(name)
@@ -77,4 +94,3 @@ class SWAGManager(object):
                 search_filter = "[?aliases[?contains(@, '{}') == `true`]]".format(name)
 
         return self.get_all(search_filter)
-

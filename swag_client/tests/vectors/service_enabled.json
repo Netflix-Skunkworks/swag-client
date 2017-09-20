@@ -1,0 +1,83 @@
+{
+  "accounts": [
+    {
+      "description": "Test account 1",
+      "alias": [
+        "testaccnt1"
+      ],
+      "bastion": "test1.net",
+      "owners": [
+        "someadmin@test.net"
+      ],
+      "type": "aws",
+      "name": "test1@test",
+      "cmc_required": false,
+      "schema_version": 1,
+      "ours": true,
+      "metadata": {
+        "s3_name": "testaccount1",
+        "cloudtrail_index": "cloudtrail_testaccount1[yyyymm]",
+        "cloudtrail_kibana_url": "http://wouldnt/you/like/to/know",
+        "email": "testaccount1@test.net",
+        "account_number": "012345678910"
+      },
+      "id": "aws-012345678910",
+      "services": [
+        {
+          "name": "service_1",
+          "status": [{"enabled": true}]
+        },
+        {
+          "name": "service_2",
+          "status": [{"enabled": false}]
+        }
+      ]
+    },
+    {
+      "description": "Test account 2",
+      "alias": [
+        "testaccnt2"
+      ],
+      "bastion": "test2.net",
+      "owners": [
+        "someadmin@netflix.com"
+      ],
+      "type": "aws",
+      "name": "test2@test",
+      "cmc_required": false,
+      "schema_version": 1,
+      "ours": true,
+      "metadata": {
+        "s3_name": "testaccount2",
+        "cloudtrail_index": "cloudtrail_testaccount2[yyyymm]",
+        "cloudtrail_kibana_url": "http://wouldnt/you/like/to/know2",
+        "email": "testaccount2@test.net",
+        "account_number": "109876543210"
+      },
+      "id": "aws-109876543210"
+    },
+    {
+      "description": "Test account 3",
+      "alias": [
+        "testaccnt3"
+      ],
+      "bastion": "test3.net",
+      "owners": [
+        "someadmin@netflix.com"
+      ],
+      "type": "aws",
+      "name": "test3@test",
+      "cmc_required": false,
+      "schema_version": 1,
+      "ours": true,
+      
+      "id": "aws-33333333333333",
+      "services": [
+        {
+          "name": "service_2",
+          "status": [{"enabled": true}]
+        }
+      ]
+    }
+  ]
+}
