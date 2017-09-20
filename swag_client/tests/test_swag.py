@@ -61,6 +61,27 @@ def test_file_backend_get_all(vector_path):
     assert len(swag.get_all()) == 2
 
 
+def test_file_backend_get_service_enabled(vector_path):
+    from swag_client.backend import SWAGManager
+    from swag_client.util import parse_swag_config_options
+
+    swag_opts = {
+        'swag.data_dir': vector_path,
+        'swag.namespace': 'service_enabled',
+        'swag.cache_expires': 0
+    }
+
+    swag = SWAGManager(**parse_swag_config_options(swag_opts))
+
+    service_1_enabled = swag.get_service_enabled('service_1')
+    assert len(service_1_enabled) == 1
+    assert service_1_enabled[0]['bastion'] == 'test1.net'
+
+    service_2_enabled = swag.get_service_enabled('service_2')
+    assert len(service_2_enabled) == 1
+    assert service_2_enabled[0]['bastion'] == 'test3.net'
+
+
 def test_file_backend_update(temp_file_name):
     from swag_client.backend import SWAGManager
     from swag_client.util import parse_swag_config_options
@@ -737,4 +758,3 @@ def test_get_by_aws_account_number(s3_bucket_name):
 
     # Test by getting account that does not exist:
     assert not get_by_aws_account_number('thisdoesnotexist', s3_bucket_name)
-
