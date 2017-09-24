@@ -50,6 +50,51 @@ Configure SWAG by passing the client additional keyword arguments:
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
 ```
 
+### Example Account JSON (v2)
+Below is an example of the bare minimum JSON that will be created by SWAG with `schema_version=2`.
+
+```json
+     account = {
+            'aliases': ['test'],
+            'contacts': ['admins@test.net'],
+            'description': 'This is just a test.',
+            'email': 'test@example.net',
+            'environment': 'test',
+            'id': '012345678910',
+            'name': 'testaccount',
+            'owner': 'ExampleCorp',
+            'provider': 'aws',
+            'sensitive': False
+     }
+```
+
+Additionally SWAG has the ability to store metadata for `services` that may need to be tied to an account.
+
+```json
+       account = {
+            'id': '012345678910',
+            ...
+            'services': [
+                {
+                    'name': 'myService',
+                    'metadata: {
+                        'name': 'testService'
+                    },
+                    'status': [
+                        {
+                            'region': 'all',
+                            'enabled': true
+                        }
+                    ]
+                }
+            ]
+
+        }
+```
+
+This service metadata for serving as a single source of truth for applications that have to routinely manage/monitor/process multiple accounts.
+
+
 ### Filtering
 
 Regardless of backend, SWAG uses the `jmespath` syntax for filtering data.
@@ -60,7 +105,7 @@ Regardless of backend, SWAG uses the `jmespath` syntax for filtering data.
 
 More information on jmespath filtering: http://jmespath.org/tutorial.html
 
-### Old-style
+### Old-style (deprecated)
 
 SWAG also supports an older style calling convention. This convention only supports the S3 backend, additionally these functions are now deprecated and will be removed in the future.
 
@@ -78,7 +123,7 @@ or to filter by a service tag:
 
 ## Versioning
 
-All SWAG metadata is versioned. The most current version of the `account` metadata schema is v2. SWAG further provides the ability to transform data between schema version as necessary.
+All SWAG metadata is versioned. The most current version of the `account` metadata schema is `v2`. SWAG further provides the ability to transform data between schema version as necessary.
 
 ## Backends
 
@@ -203,21 +248,6 @@ Upon installation the swag_client creates a `swag` entrypoint which invokes the 
 
 Examples:
 
-```bash
-    swag create <path-to-data> --bucket-name swag.test.com
-```
-
-
-```bash
-    swag validate <path-to-data> --verison 1
-```
-
-
-```bash
-    swag list --bucket-name swag.test.com
-```
-
-Additional documentation available via:
 ```bash
     swag --help
 ```
