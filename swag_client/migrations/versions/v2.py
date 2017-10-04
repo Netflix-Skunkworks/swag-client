@@ -76,7 +76,7 @@ def upgrade(account):
         )
 
         if service == 'spinnaker':
-            s['metadata'] = {'accountName': account['services'][service]['name']}
+            s['metadata'] = {'name': account['services'][service]['name']}
 
         if service == 'lazyfalcon':
             if account['services'][service].get('owner'):
@@ -197,7 +197,7 @@ def downgrade(account):
 
         elif service['name'] == 'spinnaker':
             v1_services['spinnaker'] = {
-                'name': service['metadata']['accountName'],
+                'name': service['metadata']['name'],
                 'enabled': service['status'][0]['enabled']
             }
 

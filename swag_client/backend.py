@@ -15,6 +15,15 @@ from swag_client.exceptions import InvalidSWAGBackendError
 logger = logging.getLogger(__name__)
 
 
+def one(items):
+    """Fetches one item from a list. Throws exception if there are multiple items."""
+    if items:
+        if len(items) > 1:
+            raise InvalidSWAGBackendError('Attempted to fetch one item, but multiple items found.')
+
+        return items[0]
+
+
 def get(name):
     for ep in pkg_resources.iter_entry_points('swag_client.backends'):
         if ep.name == name:
@@ -80,7 +89,7 @@ class SWAGManager(object):
     def get_service_name(self, name, search_filter):
         """Fetch account name as referenced by a particular service. """
         service_filter = "services[?name=='{}'].metadata.name".format(name)
-        return jmespath.search(service_filter, self.get(search_filter))[0]
+        return one(jmespath.search(service_filter, self.get(search_filter)))
 
     def get_by_name(self, name, alias=None):
         """Fetch all accounts with name specified, optionally include aliases."""

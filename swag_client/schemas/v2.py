@@ -36,7 +36,7 @@ class ServiceStatusSchema(Schema):
 
 class ServiceSchema(Schema):
     name = fields.Str(required=True)
-    status = fields.Nested(ServiceStatusSchema, many=True)
+    status = fields.Nested(ServiceStatusSchema, many=True, required=True)
     roles = fields.Nested(RoleSchema, many=True, missing=[])
     metadata = fields.Dict(missing={})
 
