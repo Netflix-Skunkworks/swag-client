@@ -27,12 +27,7 @@ def one(items):
 def get(name):
     for ep in pkg_resources.iter_entry_points('swag_client.backends'):
         if ep.name == name:
-            try:
-                return ep.load()
-            except Exception:
-                import traceback
-                logger.error("Failed to load plugin %r:\n%s\n" % (ep.name, traceback.format_exc()))
-                raise InvalidSWAGBackendError
+            return ep.load()
 
 
 class SWAGManager(object):
