@@ -81,6 +81,11 @@ class SWAGManager(object):
                     break
         return service_enabled_accounts
 
+    def get_service(self, name, search_filter):
+        """Fetch service metadata."""
+        service_filter = "services[?name=='{}']".format(name)
+        return one(jmespath.search(service_filter, self.get(search_filter)))
+
     def get_service_name(self, name, search_filter):
         """Fetch account name as referenced by a particular service. """
         service_filter = "services[?name=='{}'].metadata.name".format(name)
