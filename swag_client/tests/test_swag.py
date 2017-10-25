@@ -357,6 +357,7 @@ def test_s3_backend_delete_v1(s3_bucket_name):
             "admins@test.net"
         ],
         "ours": True,
+        "email": "bob@example.com",
         "description": "LOL, Test account",
         "cmc_required": False,
         "tags": [
@@ -627,6 +628,7 @@ def test_get_all_accounts(s3_bucket_name):
         "ours": True,
         "description": "LOL, Test account",
         "cmc_required": False,
+        "email": "joe@example.com",
         "tags": [
             "testing"
         ],
@@ -680,6 +682,7 @@ def test_get_by_name(s3_bucket_name):
         "owners": [
             "admins@test.net"
         ],
+        "email": "joe@example.com",
         "ours": True,
         "description": "LOL, Test account",
         "cmc_required": False,
@@ -737,6 +740,7 @@ def test_get_by_aws_account_number(s3_bucket_name):
             "admins@test.net"
         ],
         "ours": True,
+        "email": "bob@example.com",
         "description": "LOL, Test account",
         "cmc_required": False,
         "tags": [

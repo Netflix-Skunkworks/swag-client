@@ -6,13 +6,24 @@
 import logging
 import pkg_resources
 
+import jmespath
 from beaker.cache import cache_regions, cache_region
 
-import jmespath
-
-from swag_client.exceptions import InvalidSWAGBackendError
+from swag_client.schemas import v1, v2
+from swag_client.exceptions import InvalidSWAGBackendError, InvalidSWAGDataException
 
 logger = logging.getLogger(__name__)
+
+
+def validate(item, namespace='accounts', version=2):
+    """Validate item against version schema."""
+    if namespace == 'accounts':
+        if version == 2:
+            return v2.AccountSchema(strict=True).load(item).data
+        elif version == 1:
+            return v1.AccountSchema(strict=True).load(item).data
+        raise InvalidSWAGDataException('Schema version is not supported. Version: {}'.format(version))
+    raise InvalidSWAGDataException('Namespace not supported. Namespace: {}'.format(namespace))
 
 
 def one(items):
@@ -44,7 +55,7 @@ class SWAGManager(object):
 
     def create(self, item):
         """Create a new item in backend."""
-        return self.backend.create(item)
+        return self.backend.create(validate(item, version=self.version))
 
     def delete(self, item):
         """Delete an item in backend."""
@@ -52,7 +63,7 @@ class SWAGManager(object):
 
     def update(self, item):
         """Update an item in backend."""
-        return self.backend.update(item)
+        return self.backend.update(validate(item, version=self.version))
 
     @cache_region('swag')
     def get(self, search_filter):

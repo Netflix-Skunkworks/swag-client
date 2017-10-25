@@ -54,42 +54,41 @@ Configure SWAG by passing the client additional keyword arguments:
 Below is an example of the bare minimum JSON that will be created by SWAG with `schema_version=2`.
 
 ```json
-     account = {
-            'aliases': ['test'],
-            'contacts': ['admins@test.net'],
-            'description': 'This is just a test.',
-            'email': 'test@example.net',
-            'environment': 'test',
-            'id': '012345678910',
-            'name': 'testaccount',
-            'owner': 'ExampleCorp',
-            'provider': 'aws',
-            'sensitive': False
-     }
+     [{
+        "aliases": ["test"],
+        "contacts": ["admins@test.net"],
+        "description": "This is just a test.",
+        "email": "test@example.net",
+        "environment": "test",
+        "id": "012345678910",
+        "name": "testaccount",
+        "owner": "ExampleCorp",
+        "provider": "aws",
+        "sensitive": False
+     }]
 ```
 
 Additionally SWAG has the ability to store metadata for `services` that may need to be tied to an account.
 
 ```json
-       account = {
-            'id': '012345678910',
+       [{
+            "id": "012345678910",
             ...
-            'services': [
+            "services": [
                 {
-                    'name': 'myService',
-                    'metadata: {
-                        'name': 'testService'
+                    "name": "myService",
+                    "metadata: {
+                        "name": "testService"
                     },
-                    'status': [
+                    "status": [
                         {
-                            'region': 'all',
-                            'enabled': true
+                            "region": "all",
+                            "enabled": true
                         }
                     ]
                 }
             ]
-
-        }
+        }]
 ```
 
 This service metadata for serving as a single source of truth for applications that have to routinely manage/monitor/process multiple accounts.

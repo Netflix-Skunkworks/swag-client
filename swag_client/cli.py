@@ -4,18 +4,9 @@ import json
 import click
 from tabulate import tabulate
 
-from swag_client.backend import SWAGManager
-from swag_client.util import parse_swag_config_options
-from swag_client.schemas import v1, v2
-
+from swag_client.backend import SWAGManager, validate
 from swag_client.migrations import run_migration
-
-
-def validate_data(data, version=None):
-    if version == 1:
-        return v1.AccountSchema().load(data)
-    else:
-        return v2.AccountSchema().load(data)
+from swag_client.util import parse_swag_config_options
 
 
 def create_swag_from_ctx(ctx):
@@ -79,40 +70,6 @@ def s3(ctx, bucket_name, data_file, region):
     ctx.obj['DATA_FILE'] = data_file
     ctx.obj['TYPE'] = 's3'
     ctx.obj['REGION'] = region
-
-
-@cli.command()
-@click.option('--version', default=2, help='Version to validate against.')
-@click.pass_context
-def validate(ctx, version):
-    """Perform validation for SWAG data."""
-    data = None
-
-    if ctx.obj['TYPE'] == 'file':
-        if ctx.obj['DATA_FILE']:
-            file_path = ctx.obj['DATA_FILE']
-        else:
-            file_path = os.path.join(ctx.obj['DATA_DIR'], ctx.obj['NAMESPACE'] + '.json')
-
-        with open(file_path, 'r') as f:
-            data = json.loads(f.read())
-
-    if version == 1:
-        data = data['accounts']
-
-    valid = True
-    for account in data:
-        data, errors = validate_data(account, version=version)
-        if errors:
-            click.echo(
-                click.style('Validation failed. Errors: {errors}'.format(errors=errors), fg='red')
-            )
-            valid = False
-
-    if valid:
-        click.echo(
-            click.style('Validation successful.', fg='green')
-        )
 
 
 @cli.command()
@@ -195,21 +152,6 @@ def update(ctx, data):
     data = json.loads(data.read())
 
     for account in data:
-        account, errors = validate_data(account)
-
-        if errors:
-            click.echo(
-                json.dumps(account, indent=2)
-            )
-            click.echo(
-                json.dumps(errors)
-            )
-            continue
-
-        click.echo(click.style(
-            'Updated Account. AccountName: {}'.format(account['name']), fg='green')
-        )
-
         swag.update(account)
 
 
@@ -221,7 +163,7 @@ def seed_aws_data(ctx, data):
     swag = create_swag_from_ctx(ctx)
     for k, v in json.loads(data.read()).items():
         for account in v['accounts']:
-            data, errors = validate_data({
+            data = {
                     'description': 'This is an AWS owned account used for {}'.format(k),
                     'id': account['account_id'],
                     'contacts': [],
@@ -230,15 +172,7 @@ def seed_aws_data(ctx, data):
                     'sensitive': False,
                     'email': 'support@amazon.com',
                     'name': k + '-' + account['region']
-                })
-
-            if errors:
-                click.echo(
-                    json.dumps(account, indent=2)
-                )
-                click.echo(
-                    json.dumps(errors)
-                )
+                }
 
             click.echo(click.style(
                 'Seeded Account. AccountName: {}'.format(data['name']), fg='green')
