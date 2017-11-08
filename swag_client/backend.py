@@ -108,9 +108,9 @@ class SWAGManager(object):
 
         if alias:
             if self.version == 1:
-                search_filter = "accounts[?alias[?contains(@, '{}') == `true`]]".format(name)
+                search_filter = "accounts[?name=='{name}' || alias[?contains(@, '{name}') == `true`]]".format(name=name)
 
             elif self.version == 2:
-                search_filter = "[?aliases[?contains(@, '{}') == `true`]]".format(name)
+                search_filter = "[?name=='{name}' || aliases[?contains(@, '{name}') == `true`]]".format(name=name)
 
         return self.get_all(search_filter)

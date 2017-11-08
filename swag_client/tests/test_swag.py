@@ -203,6 +203,7 @@ def test_backend_get_by_name(vector_path):
     assert swag.get_by_name('testaccount')
     assert not swag.get_by_name('test')
     assert swag.get_by_name('test', alias=True)
+    assert swag.get_by_name('testaccount', alias=True)
 
 
 def test_backend_get_service_name(vector_path):
