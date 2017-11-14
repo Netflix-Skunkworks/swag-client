@@ -180,7 +180,8 @@ def downgrade(account):
     v1_services = {}
     for service in account.get('services', []):
         if service['name'] == 's3':
-            d_account['metadata']['s3_name'] = service['metadata']['name']
+            if service['metadata'].get('name'):
+                d_account['metadata']['s3_name'] = service['metadata']['name']
 
         elif service['name'] == 'cloudtrail':
             d_account['metadata']['cloudtrail_index'] = service['metadata']['esIndex']
