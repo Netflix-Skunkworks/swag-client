@@ -12,7 +12,7 @@ from swag_client.schemas.validators import validate_fqdn
 
 class AWSAccountSchema(Schema):
     account_number = fields.String(required=True, validate=Length(max=12, min=12))  # equal keyword not yet available in mainline marshmallow
-    cloudtrail_index = fields.String(required=True)
+    cloudtrail_index = fields.String()
     cloudtrail_kibana_url = fields.String()
     s3_name = fields.String()
     email = fields.Email(required=True)
