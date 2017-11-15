@@ -11,7 +11,7 @@
     "sensitive": false,
     "services": [
         {
-            "name": "s3",
+            "name": "myService",
             "metadata": {
                 "name": "testaccount"
             },
@@ -23,33 +23,22 @@
             ]
         },
         {
-            "name": "cloudtrail",
-            "metadata": {
-                "kibanaUrl": "http://testaccount.cloudtrail.dashboard.net",
-                "esIndex": "cloudtrail_testaccount[yyyymm]"
-            },
+            "name": "myService1",
+            "metadata": {},
             "status": [
                 {
-                    "enabled": true,
+                    "enabled": false,
                     "region": "all"
                 }
             ]
         },
         {
-            "name": "rolliepollie",
+            "name": "myService2",
+            "metadata": {},
             "status": [
                 {
                     "enabled": true,
-                    "region": "all"
-                }
-            ]
-        },
-        {
-            "name": "awwwdit",
-            "status": [
-                {
-                    "enabled": true,
-                    "region": "all"
+                    "region": "us-east-1"
                 }
             ]
         }
@@ -84,24 +73,6 @@
                 "kibanaUrl": "http://testaccount.cloudtrail.dashboard.net",
                 "esIndex": "cloudtrail_testaccount[yyyymm]"
             },
-            "status": [
-                {
-                    "enabled": true,
-                    "region": "all"
-                }
-            ]
-        },
-        {
-            "name": "rolliepollie",
-            "status": [
-                {
-                    "enabled": true,
-                    "region": "all"
-                }
-            ]
-        },
-        {
-            "name": "awwwdit",
             "status": [
                 {
                     "enabled": true,

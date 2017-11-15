@@ -1,5 +1,6 @@
 import os
 import warnings
+import jmespath
 
 from marshmallow import Schema, fields
 from marshmallow.validate import OneOf
@@ -62,6 +63,31 @@ def deprecated(message):
         deprecated_method.__doc__ = "%s\n\n%s" % (message, fn.__doc__)
         return deprecated_method
     return wrapper
+
+
+def append_item(namespace, version, item, items):
+    if version == 1:
+        if items:
+            items[namespace].append(item)
+        else:
+            items = {namespace: [item]}
+
+    else:
+        if items:
+            items.append(item)
+        else:
+            items = [item]
+
+    return items
+
+
+def remove_item(namespace, version, item, items):
+    if version == 1:
+        # NOTE only supports aws providers
+        path = "{namespace}[?id!='{id}']".format(id=item['id'], namespace=namespace)
+        return jmespath.search(path, items)
+    else:
+        return jmespath.search("[?id!='{id}']".format(id=item['id']), items)
 
 
 def is_sub_dict(sub_dict, dictionary):

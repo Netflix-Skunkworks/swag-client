@@ -3,10 +3,12 @@ import json
 import logging
 
 import boto3
-import jmespath
 from botocore.exceptions import ClientError
 
+from dogpile.cache import make_region
+
 from swag_client.backend import SWAGManager
+from swag_client.util import append_item, remove_item
 
 logger = logging.getLogger(__name__)
 
@@ -14,6 +16,9 @@ try:
     from json.decoder import JSONDecodeError
 except ImportError:
     JSONDecodeError = ValueError
+
+
+s3_region = make_region()
 
 
 def load_file(client, bucket, data_file):
@@ -36,14 +41,22 @@ def load_file(client, bucket, data_file):
         return
 
 
-def save_file(client, bucket, data_file, items):
+def save_file(client, bucket, data_file, items, dry_run=None):
     """Tries to write JSON data to data file in S3."""
     logger.debug('Writing {number_items} items to s3. Bucket: {bucket} Key: {key}'.format(
         number_items=len(items),
         bucket=bucket,
         key=data_file
     ))
-    return client.put_object(Bucket=bucket, Key=data_file, Body=json.dumps(items), ContentType='application/json', CacheControl='no-cache, no-store, must-revalidate')
+
+    if not dry_run:
+        return client.put_object(
+            Bucket=bucket,
+            Key=data_file,
+            Body=json.dumps(items),
+            ContentType='application/json',
+            CacheControl='no-cache, no-store, must-revalidate'
+        )
 
 
 class S3SWAGManager(SWAGManager):
@@ -60,88 +73,50 @@ class S3SWAGManager(SWAGManager):
         self.bucket_name = kwargs['bucket_name']
         self.client = boto3.client('s3', region_name=kwargs['region'])
 
-    def get(self, search_filter):
-        """Fetch one item from file. Applying given filter, raises exception if more than one item found."""
-        logger.debug('Fetching items. Filter: {filter}. Path: {data_file}'.format(
-            filter=search_filter,
-            data_file=self.data_file
-        ))
+        if not s3_region.is_configured:
+            s3_region.configure(
+                'dogpile.cache.memory',
+                expiration_time=kwargs['cache_expires']
+            )
 
-        items = load_file(self.client, self.bucket_name, self.data_file)
-        results = jmespath.search(search_filter, items)
-
-        if results:
-            if len(results) > 1:
-                raise Exception('Found more than one result for get!')
-
-            elif len(results) == 1:
-                return results[0]
-        return results
-
-    def create(self, item):
+    def create(self, item, dry_run=None):
         """Creates a new item in file."""
         logger.debug('Creating new item. Item: {item} Path: {data_file}'.format(
             item=item,
             data_file=self.data_file
         ))
 
-        items = self.get_all()
-        if self.version == 1:
-            items[self.namespace].append(item)
-        else:
-            items.append(item)
+        items = load_file(self.client, self.bucket_name, self.data_file)
+        items = append_item(self.namespace, self.version, item, items)
+        save_file(self.client, self.bucket_name, self.data_file, items, dry_run=dry_run)
 
-        save_file(self.client, self.bucket_name, self.data_file, items)
         return item
 
-    def delete(self, item):
+    def delete(self, item, dry_run=None):
         """Deletes item in file."""
         logger.debug('Deleting item. Item: {item} Path: {data_file}'.format(
             item=item,
             data_file=self.data_file
         ))
 
-        if self.version == 1:
-            # TODO only supports aws providers
-            items = self.get_all("{namespace}[?id!='{id}']".format(
-                id=item['id'],
-                namespace=self.namespace
-            ))
-        else:
-            items = self.get_all("[?id!='{id}']".format(id=item['id']))
+        items = load_file(self.client, self.bucket_name, self.data_file)
+        items = remove_item(self.namespace, self.version, item, items)
+        save_file(self.client, self.bucket_name, self.data_file, items, dry_run=dry_run)
 
-        save_file(self.client, self.bucket_name, self.data_file, items)
-
-    def update(self, item):
+    def update(self, item, dry_run=None):
         """Updates item info in file."""
         logger.debug('Updating item. Item: {item} Path: {data_file}'.format(
             item=item,
             data_file=self.data_file
         ))
-        self.delete(item)
-        return self.create(item)
+        self.delete(item, dry_run=dry_run)
+        return self.create(item, dry_run=dry_run)
 
-    def get_all(self, search_filter=None):
+    @s3_region.cache_on_arguments()
+    def get_all(self):
         """Gets all items in file."""
-        logger.debug('Fetching items. Filter: {filter}. Path: {data_file}'.format(
-            filter=search_filter,
+        logger.debug('Fetching items. Path: {data_file}'.format(
             data_file=self.data_file
         ))
 
-        items = load_file(self.client, self.bucket_name, self.data_file)
-
-        # default values
-        if not items:
-            if self.version == 1:
-                return {self.namespace: []}
-            return []
-
-        # filter values
-        if search_filter:
-            items = jmespath.search(search_filter, items)
-            if self.version == 1:
-                return {self.namespace: items}
-            return items
-
-        # return raw values
-        return items
+        return load_file(self.client, self.bucket_name, self.data_file)

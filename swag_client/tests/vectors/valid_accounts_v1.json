@@ -14,6 +14,14 @@
       "cmc_required": false,
       "schema_version": 1,
       "ours": true,
+      "service": {
+        "myService": {
+          "enabled": true
+        },
+        "myService1": {
+          "enabled": false
+        }
+      },
       "metadata": {
         "s3_name": "testaccount1",
         "cloudtrail_index": "cloudtrail_testaccount1[yyyymm]",
@@ -37,6 +45,14 @@
       "cmc_required": false,
       "schema_version": 1,
       "ours": true,
+      "service": {
+        "myService": {
+          "enabled": false
+        },
+        "myService1": {
+          "enabled": true
+        }
+      },
       "metadata": {
         "s3_name": "testaccount2",
         "cloudtrail_index": "cloudtrail_testaccount2[yyyymm]",

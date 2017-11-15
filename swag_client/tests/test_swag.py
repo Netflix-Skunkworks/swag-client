@@ -67,19 +67,61 @@ def test_file_backend_get_service_enabled(vector_path):
 
     swag_opts = {
         'swag.data_dir': vector_path,
-        'swag.namespace': 'service_enabled',
+        'swag.namespace': 'valid_accounts_v2',
         'swag.cache_expires': 0
     }
 
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
 
-    service_1_enabled = swag.get_service_enabled('service_1')
-    assert len(service_1_enabled) == 1
-    assert service_1_enabled[0]['bastion'] == 'test1.net'
+    enabled = swag.get_service_enabled('myService')
+    assert len(enabled) == 1
 
-    service_2_enabled = swag.get_service_enabled('service_2')
-    assert len(service_2_enabled) == 1
-    assert service_2_enabled[0]['bastion'] == 'test3.net'
+    enabled = swag.get_service_enabled('myService', region='us-east-1')
+    assert len(enabled) == 1
+
+    enabled = swag.get_service_enabled('myService1')
+    assert len(enabled) == 0
+
+    enabled = swag.get_service_enabled('myService1', region='us-east-1')
+    assert len(enabled) == 0
+
+    enabled = swag.get_service_enabled('myService2', region='us-east-1')
+    assert len(enabled) == 1
+
+    enabled = swag.get_service_enabled('myService2')
+    assert len(enabled) == 1
+
+
+def test_file_backend_get_service_enabled_v1(vector_path):
+    from swag_client.backend import SWAGManager
+    from swag_client.util import parse_swag_config_options
+
+    swag_opts = {
+        'swag.data_dir': vector_path,
+        'swag.namespace': 'valid_accounts_v1',
+        'swag.cache_expires': 0,
+        'swag.schema_version': 1
+    }
+
+    swag = SWAGManager(**parse_swag_config_options(swag_opts))
+
+    enabled = swag.get_service_enabled('myService')
+    assert len(enabled) == 1
+
+    enabled = swag.get_service_enabled('myService', region='us-east-1')
+    assert len(enabled) == 1
+
+    enabled = swag.get_service_enabled('myService1')
+    assert len(enabled) == 1
+
+    enabled = swag.get_service_enabled('myService1', region='us-east-1')
+    assert len(enabled) == 1
+
+    enabled = swag.get_service_enabled('myService2', region='us-east-1')
+    assert len(enabled) == 0
+
+    enabled = swag.get_service_enabled('myService2')
+    assert len(enabled) == 0
 
 
 def test_file_backend_update(temp_file_name):
@@ -217,7 +259,7 @@ def test_backend_get_service_name(vector_path):
     }
 
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
-    assert swag.get_service_name('s3', "[?name=='testaccount']") == 'testaccount'
+    assert swag.get_service_name('myService', "[?name=='testaccount']") == 'testaccount'
 
 
 def test_s3_backend_get_all(s3_bucket_name):

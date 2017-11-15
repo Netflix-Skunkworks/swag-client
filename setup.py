@@ -23,7 +23,7 @@ install_requires = [
     'marshmallow>=2.13.5',
     'boto3>=1.4.6',
     'tabulate>=0.7.7',
-    'beaker>=1.9.0',
+    'dogpile.cache==0.6.4',
     'click>=6.7',
     'jmespath>=0.9.3',
     'deepdiff>=3.3.0'
