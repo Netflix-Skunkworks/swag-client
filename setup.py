@@ -25,6 +25,7 @@ install_requires = [
     'tabulate>=0.7.7',
     'dogpile.cache==0.6.4',
     'click>=6.7',
+    'click-log==0.2.1',
     'jmespath>=0.9.3',
     'deepdiff>=3.3.0'
 ]
