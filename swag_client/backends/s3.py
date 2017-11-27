@@ -4,6 +4,7 @@ import logging
 
 import boto3
 from botocore.exceptions import ClientError
+from retrying import retry
 
 from dogpile.cache import make_region
 
@@ -21,6 +22,17 @@ except ImportError:
 s3_region = make_region()
 
 
+@retry(stop_max_attempt_number=3, wait_exponential_multiplier=1000, wait_exponential_max=10000)
+def _get_from_s3(client, bucket, data_file):
+    return client.get_object(Bucket=bucket, Key=data_file)['Body'].read()
+
+
+@retry(stop_max_attempt_number=3, wait_exponential_multiplier=1000, wait_exponential_max=10000)
+def _put_to_s3(client, bucket, data_file, body):
+    return client.put_object(Bucket=bucket, Key=data_file, Body=body, ContentType='application/json',
+                             CacheControl='no-cache, no-store, must-revalidate')
+
+
 def load_file(client, bucket, data_file):
     """Tries to load JSON data from S3."""
     logger.debug('Loading item from s3. Bucket: {bucket} Key: {key}'.format(
@@ -28,13 +40,14 @@ def load_file(client, bucket, data_file):
         key=data_file
     ))
     try:
-        data = client.get_object(Bucket=bucket, Key=data_file)['Body'].read()
+        data = _get_from_s3(client, bucket, data_file)
 
         if sys.version_info > (3,):
             data = data.decode('utf-8')
 
         return json.loads(data)
     except JSONDecodeError as e:
+        logger.exception(e)
         return
     except ClientError as e:
         logger.exception(e)
@@ -50,13 +63,7 @@ def save_file(client, bucket, data_file, items, dry_run=None):
     ))
 
     if not dry_run:
-        return client.put_object(
-            Bucket=bucket,
-            Key=data_file,
-            Body=json.dumps(items),
-            ContentType='application/json',
-            CacheControl='no-cache, no-store, must-revalidate'
-        )
+        return _put_to_s3(client, bucket, data_file, json.dumps(items))
 
 
 class S3SWAGManager(SWAGManager):
