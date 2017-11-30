@@ -42,6 +42,15 @@ def get(name):
 class SWAGManager(object):
     """Manages swag backends."""
     def __init__(self, *args, **kwargs):
+        if args or kwargs:
+            self.configure(*args, **kwargs)
+        else:
+            self.version = 'v2'
+            self.namespace = 'accounts'
+            self.backend = get('file')(*args, **kwargs)
+
+    def configure(self, *args, **kwargs):
+        """Configures a SWAG manager. Overrides existing configuration."""
         self.version = kwargs['schema_version']
         self.namespace = kwargs['namespace']
         self.backend = get(kwargs['type'])(*args, **kwargs)

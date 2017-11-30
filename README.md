@@ -50,6 +50,24 @@ Configure SWAG by passing the client additional keyword arguments:
     swag = SWAGManager(**parse_swag_config_options(swag_opts))
 ```
 
+Additionally SWAG can be used a singleton, allowing a single instance (and it's cache) to be shared across an application.
+
+```
+    from swag_client.backend import SWAGManager
+    from swag_client.util import parse_swag_config_options
+
+    swag = SWAGManager()
+
+    ...
+
+    swag_opts = {
+        'swag.type': 's3',
+        'swag.bucket_name': s3_bucket_name
+    }
+
+    swag.configure(**parse_swag_config_options(swag_opts))
+```
+
 ### Example Account JSON (v2)
 Below is an example of the bare minimum JSON that will be created by SWAG with `schema_version=2`.
 
