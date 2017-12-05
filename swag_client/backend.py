@@ -9,6 +9,7 @@ import pkg_resources
 import jmespath
 
 from swag_client.schemas import v1, v2
+from swag_client.util import parse_swag_config_options
 from swag_client.exceptions import InvalidSWAGDataException
 
 logger = logging.getLogger(__name__)
@@ -42,12 +43,10 @@ def get(name):
 class SWAGManager(object):
     """Manages swag backends."""
     def __init__(self, *args, **kwargs):
-        if args or kwargs:
-            self.configure(*args, **kwargs)
-        else:
-            self.version = 'v2'
-            self.namespace = 'accounts'
-            self.backend = get('file')(*args, **kwargs)
+        if not kwargs:
+            kwargs = parse_swag_config_options({})
+
+        self.configure(*args, **kwargs)
 
     def configure(self, *args, **kwargs):
         """Configures a SWAG manager. Overrides existing configuration."""
