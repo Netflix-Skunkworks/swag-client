@@ -213,6 +213,8 @@ The DynamoDB backend leverages AWSs DynamoDB as a key value store for SWAG metad
 
 SWAG expects a Dynamodb Table already exists.
 
+Create a new table via the AWS console named `accounts` with a primary key of `id`.
+
 #### Backend Options
 
 | Key | Type | Required | Description |
