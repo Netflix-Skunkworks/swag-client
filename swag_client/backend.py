@@ -86,7 +86,7 @@ class SWAGManager(object):
         return items
 
     def health_check(self):
-        """Fetch all data from backend."""
+        """Performs a health check specific to backend technology."""
         return self.backend.health_check()
 
     def get_service_enabled(self, name, accounts_list=None, search_filter=None, region=None):
