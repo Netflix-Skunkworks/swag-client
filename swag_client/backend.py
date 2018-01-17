@@ -50,6 +50,7 @@ class SWAGManager(object):
 
     def configure(self, *args, **kwargs):
         """Configures a SWAG manager. Overrides existing configuration."""
+
         self.version = kwargs['schema_version']
         self.namespace = kwargs['namespace']
         self.backend = get(kwargs['type'])(*args, **kwargs)
@@ -83,6 +84,10 @@ class SWAGManager(object):
             items = jmespath.search(search_filter, items)
 
         return items
+
+    def health_check(self):
+        """Fetch all data from backend."""
+        return self.backend.health_check()
 
     def get_service_enabled(self, name, accounts_list=None, search_filter=None, region=None):
         """Get a list of accounts where a service has been enabled."""

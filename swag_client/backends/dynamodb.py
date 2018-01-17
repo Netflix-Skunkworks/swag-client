@@ -1,6 +1,7 @@
 import logging
 
 import boto3
+from botocore.exceptions import ClientError
 from dogpile.cache import make_region
 
 from swag_client.backend import SWAGManager
@@ -67,3 +68,15 @@ class DynamoDBSWAGManager(SWAGManager):
         ))
 
         return self.table.scan()['Items']
+
+    def health_check(self):
+        """Gets a single item to determine if Dynamo is functioning."""
+        logger.debug('Health Check on Table: {namespace}'.format(
+            namespace=self.namespace
+        ))
+
+        try:
+            self.table.scan(Limit=1)
+            return True
+        except ClientError as e:
+            logger.debug('Error encountered with Database.  Assume unhealthy')

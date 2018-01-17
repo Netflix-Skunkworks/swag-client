@@ -127,3 +127,15 @@ class S3SWAGManager(SWAGManager):
         ))
 
         return load_file(self.client, self.bucket_name, self.data_file)
+
+    def health_check(self):
+        """Uses head object to make sure the file exists in S3."""
+        logger.debug('Health Check on S3 file for: {namespace}'.format(
+            namespace=self.namespace
+        ))
+
+        try:
+            self.client.head_object(Bucket=self.bucket_name, Key=self.data_file)
+            return True
+        except ClientError as e:
+            logger.debug('Error encountered with S3.  Assume unhealthy')

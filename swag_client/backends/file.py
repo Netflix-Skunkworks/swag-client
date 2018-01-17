@@ -109,3 +109,12 @@ class FileSWAGManager(SWAGManager):
         ))
 
         return load_file(self.data_file)
+
+
+    def health_check(self):
+        """Checks to make sure the file is there."""
+        logger.debug('Health Check on file for: {namespace}'.format(
+            namespace=self.namespace
+        ))
+
+        return os.path.isfile(self.data_file)
