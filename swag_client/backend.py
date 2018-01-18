@@ -43,10 +43,8 @@ def get(name):
 class SWAGManager(object):
     """Manages swag backends."""
     def __init__(self, *args, **kwargs):
-        if not kwargs:
-            kwargs = parse_swag_config_options({})
-
-        self.configure(*args, **kwargs)
+        if kwargs:
+            self.configure(*args, **kwargs)
 
     def configure(self, *args, **kwargs):
         """Configures a SWAG manager. Overrides existing configuration."""
