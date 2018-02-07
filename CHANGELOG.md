@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3.7 - 2017-02-07
+------------------
+
+- Fixed an issue where swag would pull in a beta version of the marshmallow dependency.
+
 0.3.0 - 2017-11-15
 ------------------
 
