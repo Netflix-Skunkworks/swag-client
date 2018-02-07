@@ -14,6 +14,13 @@ For applications that manage or deploy to several different accounts/environment
 Managing your cloud accounts with SWAG allows for consuming application to focus on business logic, removing hardcoded lists or properties from your application.
 
 
+#### Related Projects
+These projects are part of the SWAG family and either manipulate or utilize SWAG data.
+
+[swag-api](https://github.com/Netflix-Skunkworks/swag-api) - Rest API and UI for SWAG Data
+
+[swag-functions](https://github.com/Netflix-Skunkworks/swag-functions) - Transformation functions for SWAG Data
+
 ## Installation
 
 swag-client is available on pypi:
@@ -277,9 +284,87 @@ Examples:
 ```
 
 
-Additional Projects:
-These projects are part of the SWAG family and either manipulate or utilize SWAG data.
+### Extended SWAG Schema (Version 2)
+The following describes the usage of all native fields included within the SWAG schema.
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| schemaVersion | int | Describes the current schema version |
+| id | str | Unique ID of the account |
+| name | str | Canonical name, according to the account naming standard |
+| contacts | list(str) | List of team DLs that are majority stakeholders for the account |
+| provider | str | One of: AWS, GCP, Azure |
+| type | str | One of: Billing, Security, Shared Service, Service |
+| status | list(dict) | See status schema |
+| services | list(dict) | See service schema |
+| environment | str | One of: test, prod |
+| sensitive | bool |  Signifies if the account holds a special significance; (in scope for PCI, holds PII, contains sensitive key material, etc.,) |
+| description | str | Brief description about the account's intended use. |
+| owner | str | One of: <company-name>, AWS, Third-Party |
+| aliases | list(str) | List of other names this account may be referred to as |
 
 
-See [sample_accounts.json](https://github.com/Netflix-Skunkworks/swag-client/blob/master/sample_accounts.json) an example of the current json data created by SWAG.
+#### Service Schema
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| name | str | Name of the service |
+| regions | list(str) | List of regions - empty list indicates all regions |
+| roles | list(dict) | List of roles that control access to this service. See role schema |
+| metadata | dict | Service Level metadata
+
+
+#### Status Schema
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| region | str | Status per-region |
+| status | str | One of: Created, In-progress, Ready, Deprecated, In-active, Deleted |
+| notes | list(dict) | See notes schema |
+
+
+#### Notes Schema
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| date | date | Date note was created |
+| text | str | Free text field with additional information |
+
+#### Roles Schema
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| id   | str | Id of the role |
+| policyUrl | str | URL with link to role permissions |
+| roleName | str | Corresponding AWS role (if any)
+| googleGroup | str | Corresponding google group |
+| secondaryApprover | str | DL needed to approve role |
+
+
+#### Definitions
+##### Status
+
+Created - Account has been created but infrastructure has not yet been established
+
+In-progress - Account infrastructure is currently being deployed
+
+Ready - Account is ready for deployment
+
+Deprecated - Account has been marked as deprecated, no new services should be deployed into this account
+
+In-active - Account has been evacuated of all services
+
+Deleted - Account has been marked as deleted
+
+##### Type
+Billing Account(s) - The billing account in a multiple account architecture provides a central account for billing aggregation across the environment. Typically, no AWS resources (e.g. instances) run in the billing account.
+
+Security Account(s) - The security account in a multiple account architecture provides environments for central log collection and analysis (e.g. CloudTrail, VPC Flow Logs) and security monitoring (e.g. configuration monitoring with Security Monkey, active security scanning and testing with other tools).
+
+Shared Service Account(s) - Shared service accounts provide infrastructure, data, and services across the organization. All service/resource accounts will typically have network connectivity to shared service accounts.
+
+Service/Resource Account Groups - Service/resource account groups host the bulk of systems and applications. Account groups are created based on various dimensions and will typically have production and test elements (separate accounts). Service/resource accounts may optionally have connectivity to other service/resource accounts.
+
+See [sample_accounts.json](https://github.com/Netflix-Skunkworks/swag-client/blob/masVxter/sample_accounts.json) an example of the current json data created by SWAG.
+
 
