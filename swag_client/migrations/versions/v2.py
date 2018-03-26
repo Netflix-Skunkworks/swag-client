@@ -198,7 +198,7 @@ def downgrade(account):
 
         elif service['name'] == 'spinnaker':
             v1_services['spinnaker'] = {
-                'name': service['metadata']['name'],
+                'name': service['metadata'].get('name', account["name"]),
                 'enabled': service['status'][0]['enabled']
             }
 

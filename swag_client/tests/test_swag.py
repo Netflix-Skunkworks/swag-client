@@ -697,6 +697,57 @@ def test_get_all_accounts(s3_bucket_name):
     assert len(data['accounts']) == 1
 
 
+def test_downgrade_spinnaker():
+    """Test without any metadata name set -- should default to the account name"""
+    from swag_client.migrations.versions.v2 import downgrade
+    account_spinnaker = {
+        "email": "spinnakertestaccount@test.com",
+        "services": [
+            {
+                "metadata": {},
+                "status": [
+                    {
+                        "region": "all",
+                        "notes": [],
+                        "enabled": True
+                    }
+                ],
+                "name": "spinnaker"
+            }
+        ],
+        "type": "service",
+        "aliases": [],
+        "description": "Spinnaker Test for Downgrade",
+        "schemaVersion": "2",
+        "id": "098765432110",
+        "name": "testspinnaker",
+        "owner": "netflix",
+        "contacts": [
+            "test@test.com"
+        ],
+        "status": [
+            {
+                "status": "created",
+                "region": "all",
+                "notes": []
+            }
+        ],
+        "sensitive": False,
+        "provider": "aws",
+        "tags": [],
+        "environment": "test"
+    }
+
+    v1 = downgrade(account_spinnaker)
+    assert v1["services"]["spinnaker"]["name"] == "testspinnaker"
+
+    # With the name set:
+    account_spinnaker["services"][0]["metadata"]["name"] = "lolaccountname"
+    v1 = downgrade(account_spinnaker)
+    assert v1["services"]["spinnaker"]["name"] == "lolaccountname"
+
+
+
 def test_get_by_name(s3_bucket_name):
     from swag_client.swag import get_by_name
 
