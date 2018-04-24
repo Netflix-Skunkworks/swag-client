@@ -15,11 +15,19 @@ from swag_client.exceptions import InvalidSWAGDataException
 logger = logging.getLogger(__name__)
 
 
-def validate(item, namespace='accounts', version=2):
-    """Validate item against version schema."""
+def validate(item, namespace='accounts', version=2, context={}):
+    """Validate item against version schema.
+    
+    Args:
+        item: data object
+        namespace: backend namespace
+        version: schema version
+        context: schema context object
+    """
     if namespace == 'accounts':
         if version == 2:
-            return v2.AccountSchema(strict=True).load(item).data
+            schema = v2.AccountSchema(strict=True, context=context)
+            return schema.load(item).data
         elif version == 1:
             return v1.AccountSchema(strict=True).load(item).data
         raise InvalidSWAGDataException('Schema version is not supported. Version: {}'.format(version))
@@ -52,10 +60,11 @@ class SWAGManager(object):
         self.version = kwargs['schema_version']
         self.namespace = kwargs['namespace']
         self.backend = get(kwargs['type'])(*args, **kwargs)
+        self.context = kwargs.pop('schema_context', {})
 
     def create(self, item, dry_run=None):
         """Create a new item in backend."""
-        return self.backend.create(validate(item, version=self.version), dry_run=dry_run)
+        return self.backend.create(validate(item, version=self.version, context=self.context), dry_run=dry_run)
 
     def delete(self, item, dry_run=None):
         """Delete an item in backend."""
@@ -63,7 +72,7 @@ class SWAGManager(object):
 
     def update(self, item, dry_run=None):
         """Update an item in backend."""
-        return self.backend.update(validate(item, version=self.version), dry_run=dry_run)
+        return self.backend.update(validate(item, version=self.version, context=self.context), dry_run=dry_run)
 
     def get(self, search_filter):
         """Fetch one item from backend."""
