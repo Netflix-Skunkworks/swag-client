@@ -80,6 +80,7 @@ When you're ready to configure swag:
     swag.configure(**parse_swag_config_options(swag_opts))
 ```
 
+
 ### Example Account JSON (v2)
 Below is an example of the bare minimum JSON that will be created by SWAG with `schema_version=2`.
 
@@ -287,6 +288,7 @@ Examples:
 ### Extended SWAG Schema (Version 2)
 The following describes the usage of all native fields included within the SWAG schema.
 
+
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | schemaVersion | int | Describes the current schema version |
@@ -294,15 +296,32 @@ The following describes the usage of all native fields included within the SWAG 
 | name | str | Canonical name, according to the account naming standard |
 | contacts | list(str) | List of team DLs that are majority stakeholders for the account |
 | provider | str | One of: AWS, GCP, Azure |
-| type | str | One of: Billing, Security, Shared Service, Service |
+| type | str | See schema context for field validation |
 | status | list(dict) | See status schema |
 | services | list(dict) | See service schema |
-| environment | str | One of: test, prod |
+| environment | str | See schema context for field validation |
 | sensitive | bool |  Signifies if the account holds a special significance; (in scope for PCI, holds PII, contains sensitive key material, etc.,) |
 | description | str | Brief description about the account's intended use. |
-| owner | str | One of: <company-name>, AWS, Third-Party |
+| owner | str | See schema context for field validation |
 | aliases | list(str) | List of other names this account may be referred to as |
 
+### Schmea Context for Field Validation
+The V2 schema performs validation checks on certain fields to ensure values are within a defined list.  Some of these are optional and configurable to allow users to specify values that make sense for their use case.
+
+The allowed values for `owner`, `environment` and `type` can be set during SWAGManager initialization by passing a `swag.schema_context` object as part of the swag_opts.
+
+If you do not specify a schema_context entry for a field then any value is permitted.
+
+
+```
+swag_opts = {
+    'swag.schema_context': {
+        'owner': ['netflix', 'dvd', 'aws', 'third-party'],
+        'environment': ['test', 'prod'],
+        'type': ['billing', 'security', 'shared-service', 'service']
+    }
+}
+```
 
 #### Service Schema
 
