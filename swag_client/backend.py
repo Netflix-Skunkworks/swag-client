@@ -15,7 +15,7 @@ from swag_client.exceptions import InvalidSWAGDataException
 logger = logging.getLogger(__name__)
 
 
-def validate(item, namespace='accounts', version=2, context={}):
+def validate(item, namespace='accounts', version=2, context=None):
     """Validate item against version schema.
     
     Args:
