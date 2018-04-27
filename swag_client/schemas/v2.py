@@ -1,12 +1,11 @@
 from datetime import datetime
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, validates_schema
+from marshmallow.exceptions import ValidationError
 from marshmallow.validate import OneOf
 
+
 PROVIDERS = ['aws', 'gcp', 'azure']
-ACCOUNT_TYPES = ['billing', 'security', 'shared-service', 'service']
 ACCOUNT_STATUSES = ['created', 'in-progress', 'ready', 'deprecated', 'deleted', 'in-active']
-ACCOUNT_ENVIRONMENTS = ['test', 'prod']
-ACCOUNT_OWNERS = ['netflix', 'dvd', 'aws', 'third-party']
 
 
 class NoteSchema(Schema):
@@ -47,15 +46,29 @@ class AccountSchema(Schema):
     name = fields.Str(required=True)
     contacts = fields.List(fields.Email(), required=True, missing=[])
     provider = fields.Str(validate=OneOf(PROVIDERS), missing='aws')
-    type = fields.Str(validate=OneOf(ACCOUNT_TYPES), missing='service')
+    type = fields.Str(missing='service')
     tags = fields.List(fields.Str(), missing=[])
     status = fields.Nested(AccountStatusSchema, many=True, missing=[])
     email = fields.Email(required=True)
-    environment = fields.Str(validate=OneOf(ACCOUNT_ENVIRONMENTS), missing='prod')
+    environment = fields.Str(missing='prod')
     services = fields.Nested(ServiceSchema, many=True, missing=[])
     sensitive = fields.Bool(missing=False)
     description = fields.Str(required=True)
-    owner = fields.Str(validate=OneOf(ACCOUNT_OWNERS), required=True, missing='netflix')
+    owner = fields.Str(required=True, missing='netflix')
     aliases = fields.List(fields.Str(), missing=[])
 
+    @validates_schema
+    def validate_type(self, data):
+        """Performs field validation against the schema context
+        if values have been provided to SWAGManager via the
+        swag.schema_context config object.
 
+        If the schema context for a given field is empty, then
+        we assume any value is valid for the given schema field.
+        """
+        fields_to_validate = ['type', 'environment', 'owner']
+        for field in fields_to_validate:
+            value = data.get(field)
+            allowed_values = self.context.get(field)
+            if allowed_values and value not in allowed_values:
+                raise ValidationError('Must be one of {}'.format(allowed_values), field_names=field)

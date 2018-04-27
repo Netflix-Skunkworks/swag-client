@@ -11,6 +11,7 @@ class OptionsSchema(Schema):
     namespace = fields.String(required=True, missing='accounts')
     schema_version = fields.Integer(missing=2)  # default version to return data as
     cache_expires = fields.Integer(missing=60)
+    schema_context = fields.Dict(missing={})
 
 
 class FileOptionsSchema(OptionsSchema):
