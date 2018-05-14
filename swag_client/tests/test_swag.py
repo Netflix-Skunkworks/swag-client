@@ -894,7 +894,7 @@ def test_schema_context_validation_type_field():
     account = swag.create(data)
     assert account.get('type') == 'billing'
 
-    
+
 def test_schema_context_validation_environment_field():
     """Test schema context validation for environment field"""
     from swag_client.backend import SWAGManager
@@ -960,4 +960,45 @@ def test_schema_context_validation_owner_field():
     # Test with a valid owner
     data['owner'] = 'netflix'
     account = swag.create(data)
-    assert account.get('owner') == 'netflix' 
+    assert account.get('owner') == 'netflix'
+
+def test_schema_validation_account_status_field(s3_bucket_name):
+    """Test schema context validation for owner field"""
+    from swag_client.backend import SWAGManager
+    from swag_client.util import parse_swag_config_options
+
+    swag_opts = {
+        'swag.type': 's3',
+        'swag.bucket_name': s3_bucket_name,
+        'swag.schema_version': 2,
+        'swag.cache_expires': 0
+    }
+    swag = SWAGManager(**parse_swag_config_options(swag_opts))
+
+    data = {
+        "aliases": ["test"],
+        "contacts": ["admins@test.net"],
+        "description": "This is just a test.",
+        "email": "test@example.net",
+        "id": "012345678910",
+        "name": "testaccount",
+        "environment": "test",
+        "provider": "aws",
+        "status": [
+            {
+                "region": "us-west-2",
+                "status": "created",
+                "notes": []
+            }
+        ],
+        "account_status": "deleted"
+    }
+
+    # Test with invalid account_status
+    with pytest.raises(ValidationError):
+        swag.create(data)
+
+    # Test with a valid account_status
+    data['account_status'] = 'created'
+    account = swag.create(data)
+    assert account.get('account_status') == 'created'

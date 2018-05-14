@@ -56,6 +56,9 @@ class AccountSchema(Schema):
     description = fields.Str(required=True)
     owner = fields.Str(required=True, missing='netflix')
     aliases = fields.List(fields.Str(), missing=[])
+    account_status = fields.Str(validate=OneOf(ACCOUNT_STATUSES), missing='created')
+    domain = fields.Str()
+    sub_domain = fields.Str()
 
     @validates_schema
     def validate_type(self, data):
@@ -72,3 +75,15 @@ class AccountSchema(Schema):
             allowed_values = self.context.get(field)
             if allowed_values and value not in allowed_values:
                 raise ValidationError('Must be one of {}'.format(allowed_values), field_names=field)
+
+    @validates_schema
+    def validate_account_status(self, data):
+        """Performs field validation for account_status.  If any
+        region is not deleted, account_status cannot be deleted
+        """
+        deleted_status = 'deleted'
+        region_status = data.get('status')
+        account_status = data.get('account_status')
+        for region in region_status:
+            if region['status'] != deleted_status and account_status == deleted_status:
+                raise ValidationError('Account Status cannot be "deleted" if a region is not "deleted"')
