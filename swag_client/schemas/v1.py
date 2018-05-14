@@ -46,6 +46,7 @@ class AccountSchema(Schema):
     ours = fields.Boolean(required=True)
 
     schema_version = fields.Integer(required=True, missing='v1')
+    account_status = fields.String(missing='created')
 
     @validates_schema
     def validate_metadata(self, data):
