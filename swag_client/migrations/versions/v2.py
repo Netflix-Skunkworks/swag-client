@@ -168,7 +168,8 @@ def upgrade(account):
         sensitive=account['cmc_required'],
         owner=owner,
         aliases=account['alias'],
-        services=services
+        services=services,
+        account_status=account['account_status']
     )
 
 
@@ -250,5 +251,6 @@ def downgrade(account):
     d_account['ours'] = True if account['owner'] == 'netflix' else False
     d_account['netflix'] = True if account['owner'] == 'netflix' else False
     d_account['services'] = v1_services
+    d_account['account_status'] = account['account_status']
 
     return d_account

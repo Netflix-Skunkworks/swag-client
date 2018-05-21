@@ -40,7 +40,8 @@ def test_upgrade_1_to_2():
             "awwwdit": {
                 "enabled": True
             }
-        }
+        },
+        "account_status": "ready"
     }
 
     v2 = upgrade(a)
@@ -737,7 +738,8 @@ def test_downgrade_spinnaker():
         "sensitive": False,
         "provider": "aws",
         "tags": [],
-        "environment": "test"
+        "environment": "test",
+        "account_status": "ready"
     }
 
     v1 = downgrade(account_spinnaker)
