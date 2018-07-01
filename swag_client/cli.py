@@ -2,6 +2,8 @@ import logging
 import os
 import time
 import json
+
+import boto3
 import click
 import click_log
 from tabulate import tabulate
@@ -200,9 +202,14 @@ def propagate(ctx):
 
 @cli.command()
 @pass_context
-def create(ctx):
+@click.argument('data', type=click.File())
+def create(ctx, data):
     """Create a new SWAG item."""
-    pass
+    swag = create_swag_from_ctx(ctx)
+    data = json.loads(data.read())
+
+    for account in data:
+        swag.create(account, dry_run=ctx.dry_run)
 
 
 @cli.command()
@@ -283,6 +290,53 @@ def seed_aws_data(ctx, data):
 
             swag.create(data, dry_run=ctx.dry_run)
 
+@cli.command()
+@pass_context
+@click.option('--owner', type=str, required=True, help='The owner for the account schema.')
+def seed_aws_organization(ctx, owner):
+    """Seeds SWAG from an AWS organziation."""
+    swag = create_swag_from_ctx(ctx)
+    accounts = swag.get_all()
+    _ids = [result.get('id') for result in accounts]
+
+    client = boto3.client('organizations')
+    paginator = client.get_paginator('list_accounts')
+    response_iterator = paginator.paginate()
+
+    count = 0
+    for response in response_iterator:
+        for account in response['Accounts']:
+            if account['Id'] in _ids:
+                click.echo(click.style(
+                    'Ignoring Duplicate Account.  AccountId: {} already exists in SWAG'.format(account['Id']), fg='yellow')
+                )
+                continue
+
+            if account['Status'] == 'SUSPENDED':
+                status = 'deprecated'
+            else:
+                status = 'created'
+
+            data = {
+                'id': account['Id'],
+                'name': account['Name'],
+                'description': 'Account imported from AWS organization.',
+                'email': account['Email'],
+                'owner': owner,
+                'provider': 'aws',
+                'contacts': [],
+                'sensitive': False,
+                'status': [{'region': 'all', 'status': status}]
+            }
+
+            click.echo(click.style(
+                'Seeded Account. AccountName: {}'.format(data['name']), fg='green')
+            )
+
+            count += 1
+            swag.create(data, dry_run=ctx.dry_run)
+    
+    click.echo('Seeded {} accounts to SWAG.'.format(count))
 
 # todo perhaps there is a better way of dynamically adding subcommands?
 file.add_command(list)
@@ -290,6 +344,7 @@ file.add_command(migrate)
 file.add_command(propagate)
 file.add_command(create)
 file.add_command(seed_aws_data)
+file.add_command(seed_aws_organization)
 file.add_command(update)
 file.add_command(deploy_service)
 file.add_command(list_service)
@@ -297,12 +352,14 @@ dynamodb.add_command(list)
 dynamodb.add_command(create)
 dynamodb.add_command(update)
 dynamodb.add_command(seed_aws_data)
+dynamodb.add_command(seed_aws_organization)
 dynamodb.add_command(deploy_service)
 dynamodb.add_command(list_service)
 s3.add_command(list)
 s3.add_command(create)
 s3.add_command(update)
 s3.add_command(seed_aws_data)
+s3.add_command(seed_aws_organization)
 s3.add_command(deploy_service)
 s3.add_command(list_service)
 
