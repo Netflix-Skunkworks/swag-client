@@ -23,9 +23,9 @@ install_requires = [
     'marshmallow>=2.13.5,<3.0.0',
     'boto3>=1.4.6',
     'tabulate>=0.7.7',
-    'dogpile.cache==0.6.4',
+    'dogpile.cache>=0.6.4',
     'click>=6.7',
-    'click-log==0.2.1',
+    'click-log>=0.2.1',
     'jmespath>=0.9.3',
     'deepdiff>=3.3.0',
     'retrying>=1.3.3'
