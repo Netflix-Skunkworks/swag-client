@@ -39,19 +39,12 @@ def load_file(client, bucket, data_file):
         bucket=bucket,
         key=data_file
     ))
-    try:
-        data = _get_from_s3(client, bucket, data_file)
+    data = _get_from_s3(client, bucket, data_file)
 
-        if sys.version_info > (3,):
-            data = data.decode('utf-8')
+    if sys.version_info > (3,):
+        data = data.decode('utf-8')
 
-        return json.loads(data)
-    except JSONDecodeError as e:
-        logger.exception(e)
-        return
-    except ClientError as e:
-        logger.exception(e)
-        return
+    return json.loads(data)
 
 
 def save_file(client, bucket, data_file, items, dry_run=None):
