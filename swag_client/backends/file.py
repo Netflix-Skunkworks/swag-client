@@ -1,6 +1,6 @@
 import os
 import sys
-import json
+import simplejson as json
 import logging
 from io import open
 
@@ -12,7 +12,7 @@ from swag_client.util import append_item, remove_item
 logger = logging.getLogger(__name__)
 
 try:
-    from json.decoder import JSONDecodeError
+    from json.errors import JSONDecodeError
 except ImportError:
     JSONDecodeError = ValueError
 
