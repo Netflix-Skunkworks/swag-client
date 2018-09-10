@@ -28,7 +28,8 @@ install_requires = [
     'click-log>=0.2.1',
     'jmespath>=0.9.3',
     'deepdiff>=3.3.0',
-    'retrying>=1.3.3'
+    'retrying>=1.3.3',
+    'simplejson>=3.16.0'
 ]
 
 tests_require = [

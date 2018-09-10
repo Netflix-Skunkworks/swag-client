@@ -1,7 +1,7 @@
 import logging
 import os
 import time
-import json
+import simplejson as json
 
 import boto3
 import click
@@ -335,7 +335,7 @@ def seed_aws_organization(ctx, owner):
 
             count += 1
             swag.create(data, dry_run=ctx.dry_run)
-    
+
     click.echo('Seeded {} accounts to SWAG.'.format(count))
 
 # todo perhaps there is a better way of dynamically adding subcommands?
