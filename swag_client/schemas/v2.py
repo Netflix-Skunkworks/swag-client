@@ -42,7 +42,7 @@ class ServiceSchema(Schema):
 
 class RegionSchema(Schema):
     status = fields.Str(validate=OneOf(ACCOUNT_STATUSES), missing='created')
-    az_mapping = fields.Dict(required=True)
+    az_mapping = fields.Dict(missing={})
 
 
 class AccountSchema(Schema):
