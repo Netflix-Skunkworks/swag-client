@@ -40,6 +40,11 @@ class ServiceSchema(Schema):
     metadata = fields.Dict(missing={})
 
 
+class RegionSchema(Schema):
+    status = fields.Str(validate=OneOf(ACCOUNT_STATUSES), missing='created')
+    az_mapping = fields.Dict(required=True)
+
+
 class AccountSchema(Schema):
     schemaVersion = fields.Str(missing='2')
     id = fields.Str(required=True)
@@ -59,6 +64,7 @@ class AccountSchema(Schema):
     account_status = fields.Str(validate=OneOf(ACCOUNT_STATUSES), missing='created')
     domain = fields.Str()
     sub_domain = fields.Str()
+    regions = fields.Nested(RegionSchema, many=True, missing=[])
 
     @validates_schema
     def validate_type(self, data):
