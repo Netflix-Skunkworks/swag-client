@@ -39,7 +39,17 @@ def load_file(client, bucket, data_file):
         bucket=bucket,
         key=data_file
     ))
-    data = _get_from_s3(client, bucket, data_file)
+
+    # If the file doesn't exist, then return an empty dict:
+    try:
+        data = _get_from_s3(client, bucket, data_file)
+
+    except ClientError as ce:
+        if ce.response['Error']['Code'] == 'NoSuchKey':
+            return {}
+
+        else:
+            raise ce
 
     if sys.version_info > (3,):
         data = data.decode('utf-8')
