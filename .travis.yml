@@ -5,6 +5,9 @@ matrix:
     - python: "2.7"
     - python: "3.6"
 
+before_install:
+  - sudo rm -f /etc/boto.cfg
+
 cache:
   directories:
     - .pip_download_cache
