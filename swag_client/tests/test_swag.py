@@ -1004,3 +1004,52 @@ def test_schema_validation_account_status_field(s3_bucket_name):
     data['account_status'] = 'created'
     account = swag.create(data)
     assert account.get('account_status') == 'created'
+
+def test_region_validation_field(s3_bucket_name):
+    """Test schema context validation for owner field"""
+    from swag_client.backend import SWAGManager
+    from swag_client.util import parse_swag_config_options
+
+    swag_opts = {
+        'swag.type': 's3',
+        'swag.bucket_name': s3_bucket_name,
+        'swag.schema_version': 2,
+        'swag.cache_expires': 0
+    }
+    swag = SWAGManager(**parse_swag_config_options(swag_opts))
+
+    data = {
+        "aliases": ["test"],
+        "contacts": ["admins@test.net"],
+        "description": "This is just a test.",
+        "email": "test@example.net",
+        "id": "012345678910",
+        "name": "testaccount",
+        "environment": "test",
+        "provider": "aws",
+        "status": [
+            {
+                "region": "us-west-2",
+                "status": "created",
+                "notes": []
+            }
+        ],
+        "account_status": "created",
+        "regions": {
+            "us-east-1": {
+                "status": "created",
+                "az_mapping": []
+            }
+        }
+    }
+
+    # Test with invalid account_status
+    with pytest.raises(ValidationError):
+        swag.create(data)
+
+    # Test with a valid account_status
+    data['regions']['us-east-1']['az_mapping'] = {}
+    account = swag.create(data)
+    assert account.get('account_status') == 'created'
+
+

@@ -42,7 +42,7 @@ class ServiceSchema(Schema):
 
 class RegionSchema(Schema):
     status = fields.Str(validate=OneOf(ACCOUNT_STATUSES), missing='created')
-    az_mapping = fields.Dict(missing={})
+    az_mapping = fields.Dict()
 
 
 class AccountSchema(Schema):
@@ -64,7 +64,7 @@ class AccountSchema(Schema):
     account_status = fields.Str(validate=OneOf(ACCOUNT_STATUSES), missing='created')
     domain = fields.Str()
     sub_domain = fields.Str()
-    regions = fields.Nested(RegionSchema, many=True, missing=[])
+    regions = fields.Dict()
 
     @validates_schema
     def validate_type(self, data):
@@ -93,3 +93,16 @@ class AccountSchema(Schema):
         for region in region_status:
             if region['status'] != deleted_status and account_status == deleted_status:
                 raise ValidationError('Account Status cannot be "deleted" if a region is not "deleted"')
+
+    @validates_schema
+    def validate_regions_schema(self, data):
+        """Performs field validation for regions.  This should be
+        a dict with region names as the key and RegionSchema as the value
+        """
+        region_schema = RegionSchema()
+        supplied_regions = data.get('regions', {})
+        for region in supplied_regions.keys():
+            result = region_schema.validate(supplied_regions[region])
+            if len(result.keys()) > 0:
+                raise ValidationError(result)
+
