@@ -67,7 +67,20 @@ class DynamoDBSWAGManager(SWAGManager):
             namespace=self.namespace
         ))
 
-        return self.table.scan()['Items']
+        rows = []
+
+        result = self.table.scan()
+
+        while True:
+            next_token = result.get('LastEvaluatedKey', None)
+            rows += result['Items']
+
+            if next_token:
+                result = self.table.scan(ExclusiveStartKey=next_token)
+            else:
+                break
+
+        return rows
 
     def health_check(self):
         """Gets a single item to determine if Dynamo is functioning."""
