@@ -89,7 +89,10 @@ class DynamoDBSWAGManager(SWAGManager):
         ))
 
         try:
-            self.table.scan(Limit=1)
+            self.get_all()
             return True
+
         except ClientError as e:
-            logger.debug('Error encountered with Database.  Assume unhealthy')
+            logger.exception(e)
+            logger.error('Error encountered with Database. Assume unhealthy')
+            return False
