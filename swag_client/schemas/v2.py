@@ -9,7 +9,7 @@ ACCOUNT_STATUSES = ['created', 'in-progress', 'ready', 'deprecated', 'deleted', 
 
 
 class NoteSchema(Schema):
-    date = fields.Date()
+    date = fields.Str()
     text = fields.Str(required=True)
 
 
