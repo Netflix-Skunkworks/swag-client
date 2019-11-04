@@ -95,7 +95,7 @@ Below is an example of the bare minimum JSON that will be created by SWAG with `
     "name": "testaccount",
     "owner": "ExampleCorp",
     "provider": "aws",
-    "sensitive": False
+    "sensitive": false
  }]
 ```
 
