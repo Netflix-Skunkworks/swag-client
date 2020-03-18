@@ -46,10 +46,10 @@ class RegionSchema(Schema):
 
 
 class AccountSchema(Schema):
-    schemaVersion = fields.Str(missing='2')
+    schemaVersion = fields.Str(missing='v2')
     id = fields.Str(required=True)
     name = fields.Str(required=True)
-    contacts = fields.List(fields.Email(), required=True, missing=[])
+    contacts = fields.List(fields.Email(), missing=[])
     provider = fields.Str(validate=OneOf(PROVIDERS), missing='aws')
     type = fields.Str(missing='service')
     tags = fields.List(fields.Str(), missing=[])
@@ -59,7 +59,7 @@ class AccountSchema(Schema):
     services = fields.Nested(ServiceSchema, many=True, missing=[])
     sensitive = fields.Bool(missing=False)
     description = fields.Str(required=True)
-    owner = fields.Str(required=True, missing='netflix')
+    owner = fields.Str(missing='netflix')
     aliases = fields.List(fields.Str(), missing=[])
     account_status = fields.Str(validate=OneOf(ACCOUNT_STATUSES), missing='created')
     domain = fields.Str()
@@ -67,7 +67,7 @@ class AccountSchema(Schema):
     regions = fields.Dict()
 
     @validates_schema
-    def validate_type(self, data):
+    def validate_type(self, data, partial=False, many=False, unknown=False):
         """Performs field validation against the schema context
         if values have been provided to SWAGManager via the
         swag.schema_context config object.
@@ -83,7 +83,7 @@ class AccountSchema(Schema):
                 raise ValidationError('Must be one of {}'.format(allowed_values), field_names=field)
 
     @validates_schema
-    def validate_account_status(self, data):
+    def validate_account_status(self, data, partial=False, many=False, unknown=False):
         """Performs field validation for account_status.  If any
         region is not deleted, account_status cannot be deleted
         """
@@ -95,7 +95,7 @@ class AccountSchema(Schema):
                 raise ValidationError('Account Status cannot be "deleted" if a region is not "deleted"')
 
     @validates_schema
-    def validate_regions_schema(self, data):
+    def validate_regions_schema(self, data, partial=False, many=False, unknown=False):
         """Performs field validation for regions.  This should be
         a dict with region names as the key and RegionSchema as the value
         """

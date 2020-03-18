@@ -26,10 +26,10 @@ def validate(item, namespace='accounts', version=2, context=None):
     """
     if namespace == 'accounts':
         if version == 2:
-            schema = v2.AccountSchema(strict=True, context=context)
-            return schema.load(item).data
-        elif version == 1:
-            return v1.AccountSchema(strict=True).load(item).data
+            schema = v2.AccountSchema(context=context)
+            return schema.load(item)
+        #elif version == 1:
+            #return v1.AccountSchema().load(item)
         raise InvalidSWAGDataException('Schema version is not supported. Version: {}'.format(version))
     raise InvalidSWAGDataException('Namespace not supported. Namespace: {}'.format(namespace))
 
