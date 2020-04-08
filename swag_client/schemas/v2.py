@@ -65,6 +65,7 @@ class AccountSchema(Schema):
     domain = fields.Str()
     sub_domain = fields.Str()
     regions = fields.Dict()
+    org_id = fields.Str()
 
     @validates_schema
     def validate_type(self, data):
