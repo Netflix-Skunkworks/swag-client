@@ -46,7 +46,7 @@ class RegionSchema(Schema):
 
 
 class AccountSchema(Schema):
-    schemaVersion = fields.Str(missing='v2')
+    schemaVersion = fields.Str(missing='2')
     id = fields.Str(required=True)
     name = fields.Str(required=True)
     contacts = fields.List(fields.Email(), missing=[])

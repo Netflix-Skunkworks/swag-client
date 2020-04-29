@@ -376,7 +376,7 @@ def test_s3_backend_delete(s3_bucket_name):
     assert len(swag.get_all()) == 1
 
 
-def xtest_s3_backend_delete_v1(s3_bucket_name):
+def test_s3_backend_delete_v1(s3_bucket_name):
     from swag_client.backend import SWAGManager
     from swag_client.util import parse_swag_config_options
 
@@ -643,7 +643,7 @@ def test_dynamodb_backend_create(dynamodb_table):
 
 
 # test backwards compatibility
-def xtest_get_all_accounts(s3_bucket_name):
+def test_get_all_accounts(s3_bucket_name):
     from swag_client.swag import get_all_accounts
 
     from swag_client.backend import SWAGManager
@@ -752,7 +752,7 @@ def test_downgrade_spinnaker():
 
 
 
-def xtest_get_by_name(s3_bucket_name):
+def test_get_by_name(s3_bucket_name):
     from swag_client.swag import get_by_name
 
     from swag_client.backend import SWAGManager
@@ -809,7 +809,7 @@ def xtest_get_by_name(s3_bucket_name):
     assert account['metadata']['account_number'] == '012345678910'
 
 
-def xtest_get_by_aws_account_number(s3_bucket_name):
+def test_get_by_aws_account_number(s3_bucket_name):
     from swag_client.swag import get_by_aws_account_number
 
     from swag_client.backend import SWAGManager
