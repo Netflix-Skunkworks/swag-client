@@ -20,7 +20,7 @@ with open(os.path.join(ROOT, "swag_client", "__about__.py")) as f:
 
 
 install_requires = [
-    'marshmallow>=2.13.5,<3.0.0',
+    'marshmallow>=3.5.0',
     'boto3>=1.3.7',
     'tabulate>=0.7.7',
     'dogpile.cache>=0.6.4',

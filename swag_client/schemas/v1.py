@@ -31,6 +31,7 @@ TYPES = {'aws': AWSAccountSchema, 'gcp': GoogleProjectSchema}
 class AccountSchema(Schema):
     id = fields.String(required=True)
     name = fields.String(required=True)
+    email = fields.String(required=False)
     type = fields.String(required=True, validate=OneOf(TYPES.keys()))
     metadata = fields.Dict(required=True)
     tags = fields.List(fields.String())
@@ -45,9 +46,9 @@ class AccountSchema(Schema):
     # Set to False if this is a partner account your apps may need to know about.
     ours = fields.Boolean(required=True)
 
-    schema_version = fields.Integer(required=True, missing='v1')
+    schema_version = fields.Integer(missing='v1')
     account_status = fields.String(missing='created')
 
     @validates_schema
-    def validate_metadata(self, data):
-        TYPES[data['type']](many=True, strict=True).load([data['metadata']])
+    def validate_metadata(self, data, partial=False, many=False, unknown=False):
+        TYPES[data['type']](many=True).load([data['metadata']])

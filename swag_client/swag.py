@@ -36,7 +36,7 @@ def get_all_accounts(bucket, region='us-west-2', json_path='accounts.json', **fi
     swag_opts = {
         'swag.type': 's3',
         'swag.bucket_name': bucket,
-        'swag.bucket_region': region,
+        'swag.region': region,
         'swag.data_file': json_path,
         'swag.schema_version': 1
     }

@@ -8,7 +8,7 @@ from marshmallow.validate import OneOf
 
 class OptionsSchema(Schema):
     type = fields.String(missing='file', validate=OneOf(['file', 's3', 'dynamodb']))
-    namespace = fields.String(required=True, missing='accounts')
+    namespace = fields.String(missing='accounts')
     schema_version = fields.Integer(missing=2)  # default version to return data as
     cache_expires = fields.Integer(missing=60)
     schema_context = fields.Dict(missing={})
@@ -46,11 +46,11 @@ def parse_swag_config_options(config):
             options[key[5:]] = val
 
     if options.get('type') == 's3':
-        return S3OptionsSchema(strict=True).load(options).data
+        return S3OptionsSchema().load(options)
     elif options.get('type') == 'dynamodb':
-        return DynamoDBOptionsSchema(strict=True).load(options).data
+        return DynamoDBOptionsSchema().load(options)
     else:
-        return FileOptionsSchema(strict=True).load(options).data
+        return FileOptionsSchema().load(options)
 
 
 def deprecated(message):
