@@ -108,7 +108,7 @@ Additionally SWAG has the ability to store metadata for `services` that may need
     "services": [
         {
             "name": "myService",
-            "metadata: {
+            "metadata": {
                 "name": "testService"
             },
             "status": [
