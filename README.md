@@ -2,7 +2,7 @@
 
 ![PyPi](http://img.shields.io/pypi/v/swag-client.svg?style=flat)
 
-![Build Status](https://travis-ci.org/Netflix-Skunkworks/swag-client.svg?branch=master)
+[![Build Status](https://travis-ci.com/Netflix-Skunkworks/swag-client.svg?branch=master)](https://travis-ci.com/Netflix-Skunkworks/swag-client)
 
 ![OSS Status](https://img.shields.io/badge/NetflixOSS-active-brightgreen.svg)
 
